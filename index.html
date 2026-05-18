@@ -7,712 +7,159 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bleu-nuit: #0a1628;
-      --bleu-roi: #1a3a6b;
-      --bleu-marine: #2453a0;
-      --bleu-ciel: #4a7fd4;
-      --bleu-pale: #c8d8f0;
-      --rouge-french: #c41e3a;
-      --rouge-accent: #e63950;
-      --or: #c9a84c;
-      --blanc: #fafaf8;
-      --creme: #f4f0e8;
-      --gris: #8a8a8a;
+    :root{--bleu-nuit:#0a1628;--bleu-roi:#1a3a6b;--bleu-marine:#2453a0;--bleu-ciel:#4a7fd4;--bleu-pale:#c8d8f0;--rouge-french:#c41e3a;--rouge-accent:#e63950;--or:#c9a84c;--blanc:#fafaf8;--creme:#f4f0e8;--gris:#8a8a8a;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Cormorant Garamond',serif;background:var(--blanc);color:var(--bleu-nuit);overflow-x:hidden;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:64px;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.3);}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .nav-logo span{color:var(--rouge-french);}
+    .nav-links{display:flex;gap:1.8rem;list-style:none;}
+    .nav-links a{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;transition:color 0.3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--rouge-french);transform:scaleX(0);transition:transform 0.3s;}
+    .nav-links a:hover{color:var(--blanc);}
+    .nav-links a:hover::after{transform:scaleX(1);}
+    .nav-links a.active{color:var(--or);}
+
+    /* HAMBURGER */
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:all 0.3s;border-radius:1px;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+    /* MOBILE MENU */
+    .mobile-menu{position:fixed;top:64px;left:0;right:0;bottom:0;z-index:190;background:var(--bleu-nuit);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.77,0,0.175,1);}
+    .mobile-menu.open{transform:translateX(0);}
+    .mobile-menu a{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--blanc);text-decoration:none;transition:color 0.2s;}
+    .mobile-menu a.active,.mobile-menu a:hover{color:var(--rouge-french);}
+    .mob-line{width:40px;height:1px;background:rgba(201,168,76,0.3);}
+
+    /* HERO */
+    .hero{min-height:100vh;background:var(--bleu-nuit);position:relative;display:flex;align-items:center;overflow:hidden;padding-top:64px;}
+    .hero-bg{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(36,83,160,0.07) 0,rgba(36,83,160,0.07) 1px,transparent 0,transparent 50%);background-size:30px 30px;}
+    .hero-bar{position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,var(--rouge-french),var(--rouge-accent),var(--or));}
+    .hero-content{position:relative;z-index:2;padding:3rem 2rem 3rem 3rem;width:100%;max-width:720px;}
+    .hero-kicker{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+    .hero-kicker::before{content:'';width:30px;height:1px;background:var(--rouge-french);}
+    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,10vw,7rem);font-weight:900;line-height:0.95;color:var(--blanc);margin-bottom:0.3em;}
+    .hero-title em{font-style:italic;color:var(--bleu-ciel);}
+    .hero-title .rouge{color:var(--rouge-french);}
+    .hero-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(1rem,3vw,1.3rem);font-style:italic;color:var(--bleu-pale);margin:1.5rem 0 2.5rem;line-height:1.6;}
+    .hero-cta{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;}
+    .btn-primary{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--blanc);background:var(--rouge-french);text-decoration:none;padding:0.9rem 2rem;border:2px solid var(--rouge-french);transition:all 0.3s;}
+    .btn-primary:hover{background:transparent;color:var(--rouge-french);}
+    .btn-secondary{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;display:flex;align-items:center;gap:0.6rem;transition:color 0.3s;}
+    .btn-secondary:hover{color:var(--blanc);}
+    .btn-secondary::after{content:'→';}
+    .hero-badge{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:140px;height:140px;border:2px solid var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--or);animation:spin 20s linear infinite;}
+    .hero-badge-inner{animation:spin 20s linear reverse infinite;text-align:center;}
+    .hero-badge-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;display:block;line-height:1;}
+    .hero-badge-text{font-family:'Montserrat',sans-serif;font-size:0.4rem;letter-spacing:0.2em;text-transform:uppercase;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* SECTIONS */
+    section{padding:4rem 2rem;}
+    .s-label{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+    .s-label::before{content:'';width:25px;height:1px;background:var(--rouge-french);}
+    .s-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,6vw,3.5rem);font-weight:700;line-height:1.1;color:var(--bleu-nuit);margin-bottom:1.5rem;}
+    .s-title em{font-style:italic;color:var(--bleu-marine);}
+
+    /* FEATURED */
+    .featured{background:var(--creme);position:relative;}
+    .featured::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(to right,var(--bleu-nuit),var(--bleu-marine),var(--bleu-ciel));}
+    .featured-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1.5rem;margin-top:2rem;}
+    .manga-card{background:var(--blanc);overflow:hidden;cursor:pointer;transition:transform 0.4s;box-shadow:0 4px 20px rgba(10,22,40,0.08);}
+    .manga-card:hover{transform:translateY(-5px);}
+    .manga-cover{height:210px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .manga-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(10,22,40,0.8));}
+    .manga-cover-art{font-size:4rem;opacity:0.6;}
+    .manga-badge{position:absolute;top:1rem;right:1rem;background:var(--rouge-french);color:var(--blanc);font-family:'Montserrat',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.7rem;z-index:1;}
+    .manga-vol{position:absolute;bottom:1rem;left:1rem;color:var(--blanc);font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;font-style:italic;z-index:1;}
+    .manga-body{padding:1.2rem;}
+    .manga-genre{font-family:'Montserrat',sans-serif;font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-marine);margin-bottom:0.4rem;}
+    .manga-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--bleu-nuit);margin-bottom:0.4rem;}
+    .manga-author{font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-style:italic;color:var(--gris);margin-bottom:0.8rem;}
+    .manga-desc{font-family:'Cormorant Garamond',serif;font-size:0.9rem;line-height:1.6;color:#444;}
+    .manga-foot{padding:0.9rem 1.2rem;border-top:1px solid var(--bleu-pale);display:flex;justify-content:space-between;align-items:center;}
+    .manga-link{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--rouge-french);text-decoration:none;}
+    .manga-link::after{content:' →';}
+    .manga-pages{font-family:'Montserrat',sans-serif;font-size:0.6rem;color:var(--gris);}
+    .cb1{background:linear-gradient(135deg,#0a1628,#1a3a6b);}
+    .cb2{background:linear-gradient(135deg,#1a3a6b,#2453a0);}
+    .cb3{background:linear-gradient(135deg,#2453a0,#4a7fd4);}
+
+    /* STATS */
+    .stats-band{background:var(--bleu-nuit);padding:3rem 2rem;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:2rem;position:relative;}
+    .stats-band::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,var(--rouge-french),var(--or),var(--rouge-french));}
+    .stat-item{text-align:center;color:var(--blanc);}
+    .stat-num{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;color:var(--or);line-height:1;display:block;}
+    .stat-lbl{font-family:'Montserrat',sans-serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--bleu-pale);margin-top:0.4rem;display:block;}
+    .stat-div{width:1px;height:50px;background:rgba(201,168,76,0.3);}
+
+    /* CHAPTERS */
+    .chapters{background:var(--blanc);}
+    .ch-list{margin-top:2rem;display:flex;flex-direction:column;}
+    .ch-row{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:1rem;padding:1.2rem 0;border-bottom:1px solid var(--bleu-pale);text-decoration:none;color:inherit;transition:background 0.2s;}
+    .ch-row:hover{background:rgba(74,127,212,0.05);}
+    .ch-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;font-style:italic;color:var(--bleu-pale);text-align:right;}
+    .ch-t{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--bleu-nuit);}
+    .ch-s{font-family:'Cormorant Garamond',serif;font-size:0.85rem;font-style:italic;color:var(--gris);}
+    .ch-new{font-family:'Montserrat',sans-serif;font-size:0.5rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:var(--rouge-french);color:var(--blanc);padding:0.25rem 0.55rem;white-space:nowrap;}
+    .ch-info{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);white-space:nowrap;}
+
+    /* NEWSLETTER */
+    .newsletter{background:var(--bleu-marine);text-align:center;position:relative;overflow:hidden;}
+    .newsletter .s-title{color:var(--blanc);}
+    .newsletter .s-label{justify-content:center;}
+    .nl-sub{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--bleu-pale);margin-bottom:2rem;}
+    .nl-form{display:flex;max-width:480px;margin:0 auto;flex-wrap:wrap;gap:0;}
+    .nl-input{flex:1;min-width:200px;padding:0.9rem 1.2rem;border:2px solid rgba(255,255,255,0.2);border-right:none;background:rgba(255,255,255,0.08);color:var(--blanc);font-family:'Cormorant Garamond',serif;font-size:1rem;outline:none;}
+    .nl-input::placeholder{color:rgba(255,255,255,0.4);}
+    .nl-input:focus{border-color:rgba(255,255,255,0.5);}
+    .nl-btn{padding:0.9rem 1.8rem;background:var(--rouge-french);color:var(--blanc);border:2px solid var(--rouge-french);font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;}
+    .nl-btn:hover{background:transparent;}
+
+    /* FOOTER */
+    footer{background:var(--bleu-nuit);padding:3rem 2rem 1.5rem;}
+    .footer-top{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2rem;margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(201,168,76,0.2);}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--blanc);margin-bottom:0.8rem;}
+    .footer-logo span{color:var(--rouge-french);}
+    .footer-desc{font-family:'Cormorant Garamond',serif;font-size:0.9rem;line-height:1.7;color:var(--gris);}
+    .footer-col-title{font-family:'Montserrat',sans-serif;font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--or);margin-bottom:1.2rem;}
+    .footer-links{list-style:none;display:flex;flex-direction:column;gap:0.7rem;}
+    .footer-links a{font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--gris);text-decoration:none;transition:color 0.3s;}
+    .footer-links a:hover{color:var(--blanc);}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.8rem;}
+    .footer-copy{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);}
+
+    /* ── RESPONSIVE BREAKPOINTS ── */
+    @media(max-width:900px){
+      .hero-badge{display:none;}
+    }
+    @media(max-width:768px){
+      nav{padding:0 1rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+      .hero-content{padding:2rem 1.5rem 2rem 2rem;}
+      section{padding:3rem 1.2rem;}
+      .stats-band{padding:2.5rem 1.2rem;gap:1.5rem;}
+      .stat-div{display:none;}
+      .stat-num{font-size:2.4rem;}
+      .nl-form{flex-direction:column;}
+      .nl-input{border-right:2px solid rgba(255,255,255,0.2);min-width:0;}
+      .footer-top{grid-template-columns:1fr 1fr;}
+    }
+    @media(max-width:500px){
+      .hero-title{font-size:2.8rem;}
+      .hero-cta{flex-direction:column;align-items:flex-start;gap:1rem;}
+      .featured-grid{grid-template-columns:1fr;}
+      .footer-top{grid-template-columns:1fr;}
+      .ch-row{grid-template-columns:46px 1fr auto;}
+      .ch-num{font-size:1.4rem;}
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Cormorant Garamond', serif;
-      background: var(--blanc);
-      color: var(--bleu-nuit);
-      overflow-x: hidden;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 4rem;
-      height: 80px;
-      background: rgba(10, 22, 40, 0.97);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(201,168,76,0.3);
-    }
-
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: var(--blanc);
-      letter-spacing: 0.05em;
-      text-decoration: none;
-    }
-
-    .nav-logo span { color: var(--rouge-french); }
-
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--bleu-pale);
-      text-decoration: none;
-      transition: color 0.3s;
-      position: relative;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0; right: 0;
-      height: 1px;
-      background: var(--rouge-french);
-      transform: scaleX(0);
-      transition: transform 0.3s;
-    }
-
-    .nav-links a:hover { color: var(--blanc); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-    .nav-links a.active { color: var(--or); }
-
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      background: var(--bleu-nuit);
-      position: relative;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .hero-bg-pattern {
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(45deg, rgba(36,83,160,0.07) 0, rgba(36,83,160,0.07) 1px, transparent 0, transparent 50%);
-      background-size: 30px 30px;
-    }
-
-    .hero-accent-bar {
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 6px;
-      background: linear-gradient(to bottom, var(--rouge-french), var(--rouge-accent), var(--or));
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      padding: 0 8rem;
-      max-width: 900px;
-    }
-
-    .hero-kicker {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--rouge-french);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .hero-kicker::before {
-      content: '';
-      width: 40px;
-      height: 1px;
-      background: var(--rouge-french);
-    }
-
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(3.5rem, 7vw, 7rem);
-      font-weight: 900;
-      line-height: 0.95;
-      color: var(--blanc);
-      margin-bottom: 0.3em;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--bleu-ciel);
-    }
-
-    .hero-title .rouge { color: var(--rouge-french); }
-
-    .hero-subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem;
-      font-weight: 300;
-      font-style: italic;
-      color: var(--bleu-pale);
-      margin: 2rem 0 3rem;
-      line-height: 1.6;
-      max-width: 550px;
-    }
-
-    .hero-cta-group {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    .btn-primary {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--blanc);
-      background: var(--rouge-french);
-      text-decoration: none;
-      padding: 1rem 2.5rem;
-      border: 2px solid var(--rouge-french);
-      transition: all 0.3s;
-    }
-
-    .btn-primary:hover {
-      background: transparent;
-      color: var(--rouge-french);
-    }
-
-    .btn-secondary {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--bleu-pale);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      transition: color 0.3s;
-    }
-
-    .btn-secondary:hover { color: var(--blanc); }
-
-    .btn-secondary::after {
-      content: '→';
-      font-size: 1rem;
-    }
-
-    /* Hero floating badge */
-    .hero-badge {
-      position: absolute;
-      right: 8rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 180px;
-      height: 180px;
-      border: 2px solid var(--or);
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: var(--or);
-      animation: rotateBadge 20s linear infinite;
-    }
-
-    .hero-badge-inner {
-      animation: rotateBadge 20s linear reverse infinite;
-    }
-
-    .hero-badge-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .hero-badge-text {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-
-    @keyframes rotateBadge {
-      to { transform: rotate(360deg); }
-    }
-
-    /* ── SECTION GÉNÉRALE ── */
-    section { padding: 6rem 8rem; }
-
-    .section-label {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: var(--rouge-french);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .section-label::before {
-      content: '';
-      width: 30px;
-      height: 1px;
-      background: var(--rouge-french);
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      font-weight: 700;
-      line-height: 1.1;
-      color: var(--bleu-nuit);
-      margin-bottom: 1.5rem;
-    }
-
-    .section-title em {
-      font-style: italic;
-      color: var(--bleu-marine);
-    }
-
-    /* ── À LA UNE ── */
-    .featured {
-      background: var(--creme);
-      position: relative;
-    }
-
-    .featured::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(to right, var(--bleu-nuit), var(--bleu-marine), var(--bleu-ciel));
-    }
-
-    .featured-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 2rem;
-      margin-top: 4rem;
-    }
-
-    .manga-card {
-      background: var(--blanc);
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      box-shadow: 0 4px 20px rgba(10,22,40,0.08);
-    }
-
-    .manga-card:hover { transform: translateY(-8px); }
-
-    .manga-card-cover {
-      height: 280px;
-      background: var(--bleu-nuit);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .manga-card-cover-art {
-      font-size: 5rem;
-      opacity: 0.6;
-    }
-
-    .manga-card-cover::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(10,22,40,0.8));
-    }
-
-    .manga-card-badge {
-      position: absolute;
-      top: 1rem; right: 1rem;
-      background: var(--rouge-french);
-      color: var(--blanc);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.7rem;
-      z-index: 1;
-    }
-
-    .manga-card-vol {
-      position: absolute;
-      bottom: 1rem; left: 1rem;
-      color: var(--blanc);
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 900;
-      font-style: italic;
-      z-index: 1;
-    }
-
-    .manga-card-body { padding: 1.5rem; }
-
-    .manga-card-genre {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--bleu-marine);
-      margin-bottom: 0.5rem;
-    }
-
-    .manga-card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--bleu-nuit);
-      margin-bottom: 0.5rem;
-    }
-
-    .manga-card-author {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      font-style: italic;
-      color: var(--gris);
-      margin-bottom: 1rem;
-    }
-
-    .manga-card-desc {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem;
-      line-height: 1.7;
-      color: #444;
-    }
-
-    .manga-card-footer {
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--bleu-pale);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .manga-card-link {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--rouge-french);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .manga-card-link::after { content: '→'; }
-
-    .manga-card-pages {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      color: var(--gris);
-    }
-
-    /* Cover color variants */
-    .card-blue-1 .manga-card-cover { background: linear-gradient(135deg, #0a1628, #1a3a6b); }
-    .card-blue-2 .manga-card-cover { background: linear-gradient(135deg, #1a3a6b, #2453a0); }
-    .card-blue-3 .manga-card-cover { background: linear-gradient(135deg, #2453a0, #4a7fd4); }
-
-    /* ── STATS BAND ── */
-    .stats-band {
-      background: var(--bleu-nuit);
-      padding: 4rem 8rem;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stats-band::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(to right, var(--rouge-french), var(--or), var(--rouge-french));
-    }
-
-    .stat-item {
-      text-align: center;
-      color: var(--blanc);
-    }
-
-    .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: var(--or);
-      line-height: 1;
-      display: block;
-    }
-
-    .stat-label {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--bleu-pale);
-      margin-top: 0.5rem;
-    }
-
-    .stat-divider {
-      width: 1px;
-      height: 60px;
-      background: rgba(201,168,76,0.3);
-    }
-
-    /* ── DERNIERS CHAPITRES ── */
-    .chapters { background: var(--blanc); }
-
-    .chapters-list {
-      margin-top: 3rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .chapter-row {
-      display: grid;
-      grid-template-columns: 80px 1fr auto auto;
-      align-items: center;
-      gap: 2rem;
-      padding: 1.5rem 0;
-      border-bottom: 1px solid var(--bleu-pale);
-      text-decoration: none;
-      color: inherit;
-      transition: background 0.2s;
-    }
-
-    .chapter-row:hover { background: rgba(74,127,212,0.04); }
-
-    .chapter-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 900;
-      font-style: italic;
-      color: var(--bleu-pale);
-      text-align: right;
-    }
-
-    .chapter-info-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--bleu-nuit);
-    }
-
-    .chapter-info-series {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.9rem;
-      font-style: italic;
-      color: var(--gris);
-    }
-
-    .chapter-date {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      color: var(--gris);
-    }
-
-    .chapter-new {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      background: var(--rouge-french);
-      color: var(--blanc);
-      padding: 0.25rem 0.6rem;
-    }
-
-    /* ── NEWSLETTER ── */
-    .newsletter {
-      background: var(--bleu-marine);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .newsletter::before {
-      content: 'MANGA';
-      position: absolute;
-      font-family: 'Playfair Display', serif;
-      font-size: 20rem;
-      font-weight: 900;
-      color: rgba(255,255,255,0.03);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-50%);
-      white-space: nowrap;
-    }
-
-    .newsletter .section-title { color: var(--blanc); }
-
-    .newsletter-sub {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-style: italic;
-      color: var(--bleu-pale);
-      margin-bottom: 3rem;
-    }
-
-    .newsletter-form {
-      display: flex;
-      max-width: 500px;
-      margin: 0 auto;
-      gap: 0;
-    }
-
-    .newsletter-input {
-      flex: 1;
-      padding: 1rem 1.5rem;
-      border: 2px solid rgba(255,255,255,0.2);
-      border-right: none;
-      background: rgba(255,255,255,0.08);
-      color: var(--blanc);
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-
-    .newsletter-input::placeholder { color: rgba(255,255,255,0.4); }
-    .newsletter-input:focus { border-color: var(--or); }
-
-    .newsletter-btn {
-      padding: 1rem 2rem;
-      background: var(--rouge-french);
-      color: var(--blanc);
-      border: 2px solid var(--rouge-french);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .newsletter-btn:hover {
-      background: transparent;
-      border-color: var(--rouge-french);
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--bleu-nuit);
-      padding: 4rem 8rem 2rem;
-      color: var(--bleu-pale);
-    }
-
-    .footer-top {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 4rem;
-      margin-bottom: 3rem;
-      padding-bottom: 3rem;
-      border-bottom: 1px solid rgba(201,168,76,0.2);
-    }
-
-    .footer-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 900;
-      color: var(--blanc);
-      margin-bottom: 1rem;
-    }
-
-    .footer-logo span { color: var(--rouge-french); }
-
-    .footer-desc {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: var(--gris);
-      max-width: 280px;
-    }
-
-    .footer-col-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--or);
-      margin-bottom: 1.5rem;
-    }
-
-    .footer-links {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .footer-links a {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      color: var(--gris);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .footer-links a:hover { color: var(--blanc); }
-
-    .footer-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-copy {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      color: var(--gris);
-    }
-
-    .footer-flag {
-      font-size: 1.5rem;
-    }
-
-    /* ── ANIMATION ── */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate-in {
-      animation: fadeInUp 0.8s ease forwards;
-    }
-
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.25s; }
-    .delay-3 { animation-delay: 0.4s; }
   </style>
 </head>
 <body>
@@ -727,29 +174,37 @@
       <li><a href="gallery.html">Galerie</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
+    <button class="hamburger" id="ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mob">
+    <a href="index.html" class="active">Accueil</a>
+    <div class="mob-line"></div>
+    <a href="translation.html">Traductions</a>
+    <div class="mob-line"></div>
+    <a href="blog.html">Blog</a>
+    <div class="mob-line"></div>
+    <a href="gallery.html">Galerie</a>
+    <div class="mob-line"></div>
+    <a href="contact.html">Contact</a>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-bg-pattern"></div>
-    <div class="hero-accent-bar"></div>
-
-    <div class="hero-content animate-in">
+    <div class="hero-bg"></div>
+    <div class="hero-bar"></div>
+    <div class="hero-content">
       <p class="hero-kicker">Bienvenue dans notre atelier</p>
-      <h1 class="hero-title">
-        Le <em>manga</em><br>
-        en <span class="rouge">français</span>
-      </h1>
-      <p class="hero-subtitle">
-        Des traductions soignées, une passion authentique.<br>
-        Découvrez l'art du manga dans notre maison littéraire.
-      </p>
-      <div class="hero-cta-group">
+      <h1 class="hero-title">Le <em>manga</em><br>en <span class="rouge">français</span></h1>
+      <p class="hero-sub">Des traductions soignées, une passion authentique. Découvrez l'art du manga dans notre maison littéraire.</p>
+      <div class="hero-cta">
         <a href="translation.html" class="btn-primary">Voir les traductions</a>
         <a href="gallery.html" class="btn-secondary">Explorer la galerie</a>
       </div>
     </div>
-
     <div class="hero-badge">
       <div class="hero-badge-inner">
         <span class="hero-badge-num">漫</span>
@@ -758,147 +213,76 @@
     </div>
   </section>
 
-  <!-- À LA UNE -->
+  <!-- FEATURED -->
   <section class="featured">
-    <p class="section-label">Sélection du mois</p>
-    <h2 class="section-title">À la <em>une</em></h2>
-
+    <p class="s-label">Sélection du mois</p>
+    <h2 class="s-title">À la <em>une</em></h2>
     <div class="featured-grid">
-      <div class="manga-card card-blue-1">
-        <div class="manga-card-cover">
-          <div class="manga-card-cover-art">⚔</div>
-          <span class="manga-card-badge">Nouveau</span>
-          <span class="manga-card-vol">Vol. 03</span>
-        </div>
-        <div class="manga-card-body">
-          <p class="manga-card-genre">Shōnen · Action</p>
-          <h3 class="manga-card-title">L'Épée du Destin</h3>
-          <p class="manga-card-author">par Hiroshi Tanaka</p>
-          <p class="manga-card-desc">Un jeune samouraï en quête de sa propre vérité dans un Japon féodal bouleversé par des forces mystiques.</p>
-        </div>
-        <div class="manga-card-footer">
-          <a href="translation.html" class="manga-card-link">Lire maintenant</a>
-          <span class="manga-card-pages">180 pages</span>
-        </div>
+      <div class="manga-card">
+        <div class="manga-cover cb1"><div class="manga-cover-art">⚔</div><span class="manga-badge">Nouveau</span><span class="manga-vol">Vol. 03</span></div>
+        <div class="manga-body"><p class="manga-genre">Shōnen · Action</p><h3 class="manga-title">L'Épée du Destin</h3><p class="manga-author">par Hiroshi Tanaka</p><p class="manga-desc">Un jeune samouraï en quête de sa propre vérité dans un Japon féodal bouleversé par des forces mystiques.</p></div>
+        <div class="manga-foot"><a href="translation.html" class="manga-link">Lire maintenant</a><span class="manga-pages">180 p.</span></div>
       </div>
-
-      <div class="manga-card card-blue-2">
-        <div class="manga-card-cover">
-          <div class="manga-card-cover-art">🌸</div>
-          <span class="manga-card-badge">Complet</span>
-          <span class="manga-card-vol">Vol. 01</span>
-        </div>
-        <div class="manga-card-body">
-          <p class="manga-card-genre">Josei · Romance</p>
-          <h3 class="manga-card-title">Sakura Éternelle</h3>
-          <p class="manga-card-author">par Yuki Matsuda</p>
-          <p class="manga-card-desc">Une histoire d'amour délicate entre deux artistes que tout oppose, dans les rues de Kyoto sous les cerisiers en fleur.</p>
-        </div>
-        <div class="manga-card-footer">
-          <a href="translation.html" class="manga-card-link">Lire maintenant</a>
-          <span class="manga-card-pages">220 pages</span>
-        </div>
+      <div class="manga-card">
+        <div class="manga-cover cb2"><div class="manga-cover-art">🌸</div><span class="manga-badge">Complet</span><span class="manga-vol">Vol. 01</span></div>
+        <div class="manga-body"><p class="manga-genre">Josei · Romance</p><h3 class="manga-title">Sakura Éternelle</h3><p class="manga-author">par Yuki Matsuda</p><p class="manga-desc">Une histoire d'amour délicate entre deux artistes que tout oppose, dans les rues de Kyoto sous les cerisiers en fleur.</p></div>
+        <div class="manga-foot"><a href="translation.html" class="manga-link">Lire maintenant</a><span class="manga-pages">220 p.</span></div>
       </div>
-
-      <div class="manga-card card-blue-3">
-        <div class="manga-card-cover">
-          <div class="manga-card-cover-art">🔮</div>
-          <span class="manga-card-badge">En cours</span>
-          <span class="manga-card-vol">Vol. 07</span>
-        </div>
-        <div class="manga-card-body">
-          <p class="manga-card-genre">Seinen · Fantastique</p>
-          <h3 class="manga-card-title">Chroniques de l'Aube</h3>
-          <p class="manga-card-author">par Kenji Morita</p>
-          <p class="manga-card-desc">Dans un monde où la magie et la technologie coexistent, un détective hors du commun enquête sur des crimes impossibles.</p>
-        </div>
-        <div class="manga-card-footer">
-          <a href="translation.html" class="manga-card-link">Lire maintenant</a>
-          <span class="manga-card-pages">196 pages</span>
-        </div>
+      <div class="manga-card">
+        <div class="manga-cover cb3"><div class="manga-cover-art">🔮</div><span class="manga-badge">En cours</span><span class="manga-vol">Vol. 07</span></div>
+        <div class="manga-body"><p class="manga-genre">Seinen · Fantastique</p><h3 class="manga-title">Chroniques de l'Aube</h3><p class="manga-author">par Kenji Morita</p><p class="manga-desc">Dans un monde où la magie et la technologie coexistent, un détective hors du commun enquête sur des crimes impossibles.</p></div>
+        <div class="manga-foot"><a href="translation.html" class="manga-link">Lire maintenant</a><span class="manga-pages">196 p.</span></div>
       </div>
     </div>
   </section>
 
   <!-- STATS -->
   <div class="stats-band">
-    <div class="stat-item">
-      <span class="stat-num">47</span>
-      <span class="stat-label">Séries traduites</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-num">312</span>
-      <span class="stat-label">Chapitres disponibles</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-num">8K</span>
-      <span class="stat-label">Lecteurs passionnés</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-num">2019</span>
-      <span class="stat-label">Depuis</span>
-    </div>
+    <div class="stat-item"><span class="stat-num">47</span><span class="stat-lbl">Séries traduites</span></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><span class="stat-num">312</span><span class="stat-lbl">Chapitres</span></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><span class="stat-num">8K</span><span class="stat-lbl">Lecteurs</span></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><span class="stat-num">2019</span><span class="stat-lbl">Depuis</span></div>
   </div>
 
-  <!-- DERNIERS CHAPITRES -->
+  <!-- CHAPTERS -->
   <section class="chapters">
-    <p class="section-label">Mises à jour récentes</p>
-    <h2 class="section-title">Derniers <em>chapitres</em></h2>
-
-    <div class="chapters-list">
-      <a href="translation.html" class="chapter-row">
-        <span class="chapter-num">247</span>
-        <div>
-          <div class="chapter-info-title">La Forêt des Ombres — Partie II</div>
-          <div class="chapter-info-series">L'Épée du Destin</div>
-        </div>
-        <span class="chapter-date">13 mai 2026</span>
-        <span class="chapter-new">Nouveau</span>
+    <p class="s-label">Mises à jour récentes</p>
+    <h2 class="s-title">Derniers <em>chapitres</em></h2>
+    <div class="ch-list">
+      <a href="translation.html" class="ch-row">
+        <span class="ch-num">247</span>
+        <div><div class="ch-t">La Forêt des Ombres — Partie II</div><div class="ch-s">L'Épée du Destin</div></div>
+        <span class="ch-new">Nouveau</span>
       </a>
-
-      <a href="translation.html" class="chapter-row">
-        <span class="chapter-num">89</span>
-        <div>
-          <div class="chapter-info-title">Le Dernier Témoin</div>
-          <div class="chapter-info-series">Chroniques de l'Aube</div>
-        </div>
-        <span class="chapter-date">11 mai 2026</span>
-        <span class="chapter-new">Nouveau</span>
+      <a href="translation.html" class="ch-row">
+        <span class="ch-num">89</span>
+        <div><div class="ch-t">Le Dernier Témoin</div><div class="ch-s">Chroniques de l'Aube</div></div>
+        <span class="ch-new">Nouveau</span>
       </a>
-
-      <a href="translation.html" class="chapter-row">
-        <span class="chapter-num">15</span>
-        <div>
-          <div class="chapter-info-title">Adieu, Printemps</div>
-          <div class="chapter-info-series">Sakura Éternelle</div>
-        </div>
-        <span class="chapter-date">9 mai 2026</span>
-        <span class="chapter-date">Fin de série</span>
+      <a href="translation.html" class="ch-row">
+        <span class="ch-num">15</span>
+        <div><div class="ch-t">Adieu, Printemps</div><div class="ch-s">Sakura Éternelle</div></div>
+        <span class="ch-info">Fin de série</span>
       </a>
-
-      <a href="translation.html" class="chapter-row">
-        <span class="chapter-num">33</span>
-        <div>
-          <div class="chapter-info-title">Tempête sur la Capitale</div>
-          <div class="chapter-info-series">Le Gardien du Temps</div>
-        </div>
-        <span class="chapter-date">7 mai 2026</span>
-        <span class="chapter-date"></span>
+      <a href="translation.html" class="ch-row">
+        <span class="ch-num">33</span>
+        <div><div class="ch-t">Tempête sur la Capitale</div><div class="ch-s">Le Gardien du Temps</div></div>
+        <span class="ch-info">7 mai</span>
       </a>
     </div>
   </section>
 
   <!-- NEWSLETTER -->
   <section class="newsletter">
-    <p class="section-label" style="justify-content:center;">Restez informé</p>
-    <h2 class="section-title">Notre <em>lettre d'information</em></h2>
-    <p class="newsletter-sub">Recevez chaque semaine nos nouvelles traductions directement dans votre boîte.</p>
-    <form class="newsletter-form" onsubmit="return false;">
-      <input type="email" class="newsletter-input" placeholder="votre@email.com">
-      <button class="newsletter-btn" type="submit">S'abonner</button>
+    <p class="s-label" style="justify-content:center;">Restez informé</p>
+    <h2 class="s-title">Notre <em>lettre d'information</em></h2>
+    <p class="nl-sub">Recevez chaque semaine nos nouvelles traductions directement dans votre boîte.</p>
+    <form class="nl-form" onsubmit="return false;">
+      <input type="email" class="nl-input" placeholder="votre@email.com">
+      <button class="nl-btn" type="submit">S'abonner</button>
     </form>
   </section>
 
@@ -907,44 +291,45 @@
     <div class="footer-top">
       <div>
         <div class="footer-logo">Maison du <span>Manga</span></div>
-        <p class="footer-desc">Un espace dédié aux amateurs de manga francophone. Traductions soignées, respect de l'œuvre originale et passion partagée.</p>
+        <p class="footer-desc">Un espace dédié aux amateurs de manga francophone. Traductions soignées et passion partagée.</p>
       </div>
       <div>
         <h4 class="footer-col-title">Navigation</h4>
         <ul class="footer-links">
-          <li><a href="index.html">Accueil</a></li>
-          <li><a href="translation.html">Traductions</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="gallery.html">Galerie</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="index.html">Accueil</a></li><li><a href="translation.html">Traductions</a></li>
+          <li><a href="blog.html">Blog</a></li><li><a href="gallery.html">Galerie</a></li><li><a href="contact.html">Contact</a></li>
         </ul>
       </div>
       <div>
         <h4 class="footer-col-title">Genres</h4>
         <ul class="footer-links">
-          <li><a href="translation.html">Shōnen</a></li>
-          <li><a href="translation.html">Shōjo</a></li>
-          <li><a href="translation.html">Seinen</a></li>
-          <li><a href="translation.html">Josei</a></li>
-          <li><a href="translation.html">Kodomomuke</a></li>
+          <li><a href="translation.html">Shōnen</a></li><li><a href="translation.html">Shōjo</a></li>
+          <li><a href="translation.html">Seinen</a></li><li><a href="translation.html">Josei</a></li>
         </ul>
       </div>
       <div>
         <h4 class="footer-col-title">Légal</h4>
         <ul class="footer-links">
-          <li><a href="#">À propos</a></li>
-          <li><a href="#">Mentions légales</a></li>
-          <li><a href="#">Politique de confidentialité</a></li>
-          <li><a href="#">CGU</a></li>
+          <li><a href="#">À propos</a></li><li><a href="#">Mentions légales</a></li><li><a href="#">Confidentialité</a></li>
         </ul>
       </div>
     </div>
-
     <div class="footer-bottom">
-      <p class="footer-copy">© 2026 Maison du Manga · Fait avec amour en France 🇫🇷</p>
-      <span class="footer-flag">🇫🇷 🇯🇵</span>
+      <p class="footer-copy">© 2026 Maison du Manga · Fait avec amour 🇫🇷</p>
+      <span style="font-size:1.2rem;">🇫🇷 🇯🇵</span>
     </div>
   </footer>
 
+  <script>
+    const ham = document.getElementById('ham'), mob = document.getElementById('mob');
+    ham.addEventListener('click', () => {
+      ham.classList.toggle('open');
+      mob.classList.toggle('open');
+      document.body.style.overflow = mob.classList.contains('open') ? 'hidden' : '';
+    });
+    mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      ham.classList.remove('open'); mob.classList.remove('open'); document.body.style.overflow = '';
+    }));
+  </script>
 </body>
 </html>
