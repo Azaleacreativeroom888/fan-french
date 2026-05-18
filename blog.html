@@ -8,375 +8,218 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bleu-nuit: #0a1628;
-      --bleu-roi: #1a3a6b;
-      --bleu-marine: #2453a0;
-      --bleu-ciel: #4a7fd4;
-      --bleu-pale: #c8d8f0;
-      --rouge-french: #c41e3a;
-      --rouge-accent: #e63950;
-      --or: #c9a84c;
-      --blanc: #fafaf8;
-      --creme: #f4f0e8;
-      --gris: #8a8a8a;
+      --bleu-nuit:#0a1628; --bleu-roi:#1a3a6b; --bleu-marine:#2453a0;
+      --bleu-ciel:#4a7fd4; --bleu-pale:#c8d8f0; --rouge-french:#c41e3a;
+      --or:#c9a84c; --or-light:#fdf5e0; --blanc:#fafaf8; --creme:#f4f0e8; --gris:#8a8a8a;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Cormorant Garamond',serif;background:var(--creme);color:var(--bleu-nuit);overflow-x:hidden;}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:64px;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.3);}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .nav-logo span{color:var(--rouge-french);}
+    .nav-links{display:flex;gap:1.8rem;list-style:none;}
+    .nav-links a{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;transition:color 0.3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--rouge-french);transform:scaleX(0);transition:transform 0.3s;}
+    .nav-links a:hover{color:var(--blanc);}
+    .nav-links a:hover::after{transform:scaleX(1);}
+    .nav-links a.active{color:var(--or);}
+
+    /* ── HAMBURGER ── */
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:all 0.3s;border-radius:1px;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{position:fixed;top:64px;left:0;right:0;bottom:0;z-index:190;background:var(--bleu-nuit);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.77,0,0.175,1);}
+    .mobile-menu.open{transform:translateX(0);}
+    .mobile-menu a{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--blanc);text-decoration:none;}
+    .mobile-menu a.active,.mobile-menu a:hover{color:var(--rouge-french);}
+    .mob-line{width:40px;height:1px;background:rgba(201,168,76,0.3);}
+
+    /* ── PAGE HEADER ── */
+    .page-header{background:var(--bleu-nuit);padding:8rem 2rem 4rem;position:relative;overflow:hidden;}
+    .page-header::after{content:'BLOG';position:absolute;right:-1rem;bottom:-2rem;font-family:'Playfair Display',serif;font-size:clamp(5rem,20vw,14rem);font-weight:900;color:rgba(255,255,255,0.03);white-space:nowrap;pointer-events:none;}
+    .ph-kicker{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
+    .ph-kicker::before{content:'';width:30px;height:1px;background:var(--rouge-french);}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,8vw,5rem);font-weight:900;color:var(--blanc);line-height:1;}
+    .page-header h1 em{font-style:italic;color:var(--bleu-ciel);}
+    .page-header-desc{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--bleu-pale);margin-top:1.2rem;max-width:560px;}
+
+    /* ── FILTER BAR ── */
+    .filter-bar{background:var(--blanc);border-bottom:2px solid var(--bleu-pale);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:sticky;top:64px;z-index:100;}
+    .filter-label{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gris);flex-shrink:0;}
+    .filter-tabs{display:flex;gap:0.5rem;flex-wrap:wrap;}
+    .filter-tab{font-family:'Montserrat',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.45rem 1.1rem;border:2px solid var(--bleu-pale);background:transparent;color:var(--gris);cursor:pointer;border-radius:2px;transition:all 0.2s;}
+    .filter-tab:hover{border-color:var(--bleu-marine);color:var(--bleu-marine);}
+    .filter-tab.active{background:var(--bleu-marine);border-color:var(--bleu-marine);color:var(--blanc);}
+
+    /* ── CONTAINER ── */
+    .container{max-width:720px;margin:3rem auto 5rem;padding:0 2rem;display:flex;flex-direction:column;gap:1.5rem;}
+
+    /* ── ENTRY CARD ── */
+    .entry-card{
+      background:var(--blanc);
+      border:2px solid var(--bleu-pale);
+      overflow:hidden;
+      transition:transform 0.2s, box-shadow 0.2s;
+      box-shadow:4px 4px 0 var(--bleu-pale);
+      animation:fadeUp 0.4s ease both;
+    }
+    .entry-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--bleu-pale);}
+    .entry-card:nth-child(1){animation-delay:0.04s}
+    .entry-card:nth-child(2){animation-delay:0.09s}
+    .entry-card:nth-child(3){animation-delay:0.14s}
+    .entry-card:nth-child(4){animation-delay:0.19s}
+    .entry-card:nth-child(5){animation-delay:0.24s}
+    .entry-card:nth-child(6){animation-delay:0.29s}
+    .entry-card:nth-child(7){animation-delay:0.34s}
+    .entry-card:nth-child(8){animation-delay:0.39s}
+
+    /* カードヘッダー */
+    .entry-header{
+      background:var(--bleu-nuit);
+      border-bottom:2px solid var(--bleu-marine);
+      padding:0.9rem 1.4rem;
+      display:flex;
+      align-items:center;
+      gap:1rem;
+    }
+    .entry-date{
+      font-family:'Playfair Display',serif;
+      font-size:1rem;
+      font-style:italic;
+      font-weight:700;
+      color:var(--bleu-pale);
+      letter-spacing:0.05em;
+      flex:1;
+    }
+    .entry-date strong{
+      color:var(--blanc);
+      font-style:normal;
+    }
+    .entry-tag{
+      font-family:'Montserrat',sans-serif;
+      font-size:0.5rem;
+      font-weight:700;
+      letter-spacing:0.15em;
+      text-transform:uppercase;
+      padding:0.3rem 0.7rem;
+      flex-shrink:0;
+      white-space:nowrap;
+    }
+    /* タグカラー */
+    .tag-manga   {background:var(--rouge-french);color:var(--blanc);}
+    .tag-trans   {background:var(--bleu-marine);color:var(--blanc);}
+    .tag-movie   {background:#6b3fa0;color:var(--blanc);}
+    .tag-humor   {background:var(--or);color:var(--bleu-nuit);}
+    .tag-nuance  {background:#2a7a4f;color:var(--blanc);}
+    .tag-vocab   {background:#b05a00;color:var(--blanc);}
+    .tag-culture {background:#1a6b8a;color:var(--blanc);}
+    .tag-dessin  {background:#8a2a6b;color:var(--blanc);}
+
+    /* カード本文 */
+    .entry-body{padding:1.4rem 1.5rem;}
+    .entry-body p{
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.1rem;
+      line-height:1.85;
+      color:#2a2a2a;
+    }
+    .entry-body strong{
+      color:var(--rouge-french);
+      font-weight:700;
+    }
+    .entry-body em{
+      font-style:italic;
+      color:var(--bleu-marine);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Cormorant Garamond', serif;
-      background: var(--blanc);
-      color: var(--bleu-nuit);
+    /* 区切り線（dinerのsection-dividerに相当） */
+    .entry-divider{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin:1rem 0 0.8rem;
+    }
+    .entry-divider span{
+      font-family:'Montserrat',sans-serif;
+      font-size:0.5rem;
+      letter-spacing:0.25em;
+      text-transform:uppercase;
+      color:var(--gris);
+      white-space:nowrap;
+    }
+    .entry-divider::before,.entry-divider::after{
+      content:'';flex:1;height:1px;
+      background:repeating-linear-gradient(90deg,var(--bleu-pale) 0,var(--bleu-pale) 5px,transparent 5px,transparent 10px);
     }
 
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 4rem; height: 80px;
-      background: rgba(10,22,40,0.97);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(201,168,76,0.3);
+    /* 引用ブロック */
+    .entry-quote{
+      margin:1rem 0 0;
+      padding:0.8rem 1.2rem;
+      border-left:3px solid var(--rouge-french);
+      background:rgba(196,30,58,0.04);
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.05rem;
+      font-style:italic;
+      line-height:1.7;
+      color:#3a1a1a;
+    }
+    .entry-quote .ja{
+      font-style:normal;
+      font-weight:600;
+      color:var(--bleu-marine);
+      display:block;
+      margin-bottom:0.3rem;
+      font-size:1rem;
+    }
+    .entry-quote .fr{
+      color:var(--rouge-french);
+      font-weight:600;
     }
 
-    .nav-logo {
-      font-family: 'Playfair Display', serif; font-size: 1.5rem;
-      font-weight: 900; color: var(--blanc); text-decoration: none;
-    }
-    .nav-logo span { color: var(--rouge-french); }
-
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a {
-      font-family: 'Montserrat', sans-serif; font-size: 0.7rem;
-      font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--bleu-pale); text-decoration: none; transition: color 0.3s;
-      position: relative;
-    }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-      height: 1px; background: var(--rouge-french);
-      transform: scaleX(0); transition: transform 0.3s;
-    }
-    .nav-links a:hover { color: var(--blanc); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-    .nav-links a.active { color: var(--or); }
-
-    /* PAGE HEADER */
-    .page-header {
-      background: var(--bleu-nuit);
-      padding: 10rem 8rem 5rem;
-      position: relative; overflow: hidden;
+    /* フッターライン */
+    .entry-footer{
+      padding:0.6rem 1.4rem;
+      background:var(--creme);
+      border-top:1px solid var(--bleu-pale);
+      font-family:'Montserrat',sans-serif;
+      font-size:0.5rem;
+      color:var(--gris);
+      display:flex;
+      justify-content:flex-end;
     }
 
-    .page-header::after {
-      content: 'BLOG';
-      position: absolute; right: -1rem; bottom: -3rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 16rem; font-weight: 900;
-      color: rgba(255,255,255,0.03); white-space: nowrap;
+    /* ── FOOTER ── */
+    footer{background:var(--bleu-nuit);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid rgba(201,168,76,0.2);}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .footer-logo span{color:var(--rouge-french);}
+    .footer-copy{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);}
+
+    /* ── ANIMATION ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav{padding:0 1rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+      .container{padding:0 1.2rem;margin:2rem auto 4rem;}
+      .filter-bar{padding:1rem 1.2rem;}
     }
-
-    .page-header-kicker {
-      font-family: 'Montserrat', sans-serif; font-size: 0.65rem;
-      letter-spacing: 0.35em; text-transform: uppercase;
-      color: var(--rouge-french); margin-bottom: 1rem;
-      display: flex; align-items: center; gap: 1rem;
-    }
-    .page-header-kicker::before { content: ''; width: 40px; height: 1px; background: var(--rouge-french); }
-
-    .page-header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 5vw, 5rem);
-      font-weight: 900; color: var(--blanc); line-height: 1;
-    }
-    .page-header h1 em { font-style: italic; color: var(--bleu-ciel); }
-
-    /* FEATURED ARTICLE */
-    .featured-article {
-      background: var(--creme);
-      padding: 5rem 8rem;
-      border-bottom: 1px solid var(--bleu-pale);
-    }
-
-    .featured-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      align-items: center;
-    }
-
-    .featured-cover {
-      height: 420px;
-      background: linear-gradient(135deg, var(--bleu-nuit), var(--bleu-marine));
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .featured-cover-emoji {
-      font-size: 8rem;
-      opacity: 0.5;
-    }
-
-    .featured-cover-overlay {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 2rem;
-      background: linear-gradient(to top, rgba(10,22,40,0.9), transparent);
-    }
-
-    .featured-cover-category {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--rouge-french);
-      background: rgba(10,22,40,0.7);
-      padding: 0.3rem 0.8rem; display: inline-block;
-    }
-
-    .featured-kicker {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem; letter-spacing: 0.3em;
-      text-transform: uppercase; color: var(--rouge-french);
-      margin-bottom: 1rem;
-      display: flex; align-items: center; gap: 1rem;
-    }
-    .featured-kicker::before { content: ''; width: 20px; height: 1px; background: var(--rouge-french); }
-
-    .featured-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem; font-weight: 700; line-height: 1.1;
-      color: var(--bleu-nuit); margin-bottom: 1.5rem;
-    }
-    .featured-title em { font-style: italic; color: var(--bleu-marine); }
-
-    .featured-meta {
-      display: flex; gap: 2rem; margin-bottom: 1.5rem;
-      align-items: center;
-    }
-
-    .featured-author {
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-
-    .author-avatar {
-      width: 36px; height: 36px;
-      background: var(--bleu-marine);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-    }
-
-    .author-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem; font-style: italic;
-      color: var(--bleu-nuit);
-    }
-
-    .featured-date {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem; letter-spacing: 0.1em;
-      color: var(--gris);
-    }
-
-    .featured-excerpt {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem; line-height: 1.8;
-      color: #444; margin-bottom: 2rem;
-    }
-
-    .read-more {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--blanc); background: var(--rouge-french);
-      text-decoration: none; padding: 0.9rem 2rem;
-      display: inline-block; transition: all 0.3s;
-      border: 2px solid var(--rouge-french);
-    }
-    .read-more:hover { background: transparent; color: var(--rouge-french); }
-
-    /* ARTICLE GRID */
-    .articles-section {
-      padding: 5rem 8rem;
-    }
-
-    .section-header {
-      display: flex; justify-content: space-between;
-      align-items: baseline; margin-bottom: 3rem;
-    }
-
-    .section-label {
-      font-family: 'Montserrat', sans-serif; font-size: 0.6rem;
-      letter-spacing: 0.4em; text-transform: uppercase;
-      color: var(--rouge-french);
-      display: flex; align-items: center; gap: 1rem;
-    }
-    .section-label::before { content: ''; width: 30px; height: 1px; background: var(--rouge-french); }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem; font-weight: 700;
-      color: var(--bleu-nuit);
-    }
-    .section-title em { font-style: italic; color: var(--bleu-marine); }
-
-    .see-all {
-      font-family: 'Montserrat', sans-serif; font-size: 0.6rem;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--bleu-marine); text-decoration: none;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .see-all::after { content: '→'; }
-    .see-all:hover { color: var(--rouge-french); }
-
-    .articles-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 2rem;
-    }
-
-    .article-card {
-      display: flex; flex-direction: column;
-      text-decoration: none; color: inherit;
-      transition: transform 0.3s;
-    }
-    .article-card:hover { transform: translateY(-5px); }
-
-    .article-card-img {
-      height: 200px;
-      background: var(--bleu-nuit);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 4rem; margin-bottom: 1.5rem;
-      position: relative; overflow: hidden;
-    }
-
-    .article-card-img::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 40%, rgba(10,22,40,0.6));
-    }
-
-    .a1 { background: linear-gradient(135deg, #0a1628, #1a3a6b); }
-    .a2 { background: linear-gradient(135deg, #1a3a6b, #2453a0); }
-    .a3 { background: linear-gradient(135deg, #2453a0, #4a7fd4); }
-    .a4 { background: linear-gradient(135deg, #0a1628, #2453a0); }
-    .a5 { background: linear-gradient(135deg, #1a3a6b, #4a7fd4); }
-    .a6 { background: linear-gradient(135deg, #c41e3a, #0a1628); }
-
-    .article-category {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--rouge-french);
-      margin-bottom: 0.5rem;
-    }
-
-    .article-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem; font-weight: 700;
-      color: var(--bleu-nuit); margin-bottom: 0.8rem;
-      line-height: 1.2;
-    }
-
-    .article-excerpt {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem; line-height: 1.7;
-      color: #555; margin-bottom: 1rem; flex: 1;
-    }
-
-    .article-footer {
-      display: flex; justify-content: space-between;
-      align-items: center;
-      padding-top: 1rem;
-      border-top: 1px solid var(--bleu-pale);
-    }
-
-    .article-date {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; color: var(--gris);
-    }
-
-    .article-read {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; letter-spacing: 0.1em;
-      color: var(--bleu-marine);
-    }
-
-    /* EDITORIAL PICKS */
-    .editorial {
-      background: var(--bleu-nuit);
-      padding: 5rem 8rem;
-    }
-
-    .editorial-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      background: rgba(201,168,76,0.2);
-      margin-top: 3rem;
-    }
-
-    .editorial-item {
-      background: var(--bleu-nuit);
-      padding: 2.5rem;
-      text-decoration: none;
-      transition: background 0.2s;
-      display: flex;
-      gap: 2rem;
-      align-items: flex-start;
-    }
-
-    .editorial-item:hover { background: rgba(36,83,160,0.3); }
-
-    .editorial-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem; font-weight: 900;
-      font-style: italic; color: var(--or);
-      flex-shrink: 0; line-height: 1;
-    }
-
-    .editorial-content {}
-
-    .editorial-cat {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--rouge-french);
-      margin-bottom: 0.5rem;
-    }
-
-    .editorial-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; font-weight: 700;
-      color: var(--blanc); margin-bottom: 0.5rem;
-    }
-
-    .editorial-date {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; color: var(--gris);
-    }
-
-    /* FOOTER */
-    footer {
-      background: var(--bleu-nuit);
-      padding: 2rem 8rem;
-      display: flex; justify-content: space-between; align-items: center;
-      border-top: 1px solid rgba(201,168,76,0.2);
-    }
-
-    .footer-logo {
-      font-family: 'Playfair Display', serif; font-size: 1.2rem;
-      font-weight: 900; color: var(--blanc); text-decoration: none;
-    }
-    .footer-logo span { color: var(--rouge-french); }
-
-    .footer-copy {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem; color: var(--gris);
+    @media(max-width:500px){
+      .page-header{padding:7rem 1.2rem 3rem;}
+      .entry-header{flex-wrap:wrap;gap:0.5rem;}
+      .entry-date{font-size:0.9rem;}
     }
   </style>
 </head>
 <body>
 
+  <!-- NAV -->
   <nav>
     <a href="index.html" class="nav-logo">Maison du <span>Manga</span></a>
     <ul class="nav-links">
@@ -386,174 +229,156 @@
       <li><a href="gallery.html">Galerie</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
+    <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
+  <div class="mobile-menu" id="mob">
+    <a href="index.html">Accueil</a><div class="mob-line"></div>
+    <a href="translation.html">Traductions</a><div class="mob-line"></div>
+    <a href="blog.html" class="active">Blog</a><div class="mob-line"></div>
+    <a href="gallery.html">Galerie</a><div class="mob-line"></div>
+    <a href="contact.html">Contact</a>
+  </div>
 
+  <!-- PAGE HEADER -->
   <div class="page-header">
-    <p class="page-header-kicker">Notre univers</p>
-    <h1>Le <em>Blog</em> de la Maison</h1>
+    <p class="ph-kicker">Journal de bord</p>
+    <h1>Le <em>Blog</em></h1>
+    <p class="page-header-desc">Notes du quotidien — traduction, manga, apprentissage, et tout ce qui passe par la tête.</p>
   </div>
 
-  <!-- FEATURED -->
-  <div class="featured-article">
-    <div class="featured-inner">
-      <div class="featured-cover">
-        <div class="featured-cover-emoji">✒️</div>
-        <div class="featured-cover-overlay">
-          <span class="featured-cover-category">Dossier du mois</span>
-        </div>
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">Filtrer :</span>
+    <div class="filter-tabs">
+      <button class="filter-tab active">Tout</button>
+      <button class="filter-tab">Manga</button>
+      <button class="filter-tab">Traduction</button>
+      <button class="filter-tab">Humour</button>
+      <button class="filter-tab">Culture</button>
+      <button class="filter-tab">Vocabulaire</button>
+    </div>
+  </div>
+
+  <!-- ENTRIES -->
+  <div class="container">
+
+    <!-- 1 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>18 mai</strong> · 2026</span>
+        <span class="entry-tag tag-trans">Traduction</span>
       </div>
-      <div>
-        <p class="featured-kicker">À la une</p>
-        <h2 class="featured-title">L'art de traduire <em>sans trahir</em> — dialogue entre deux cultures</h2>
-        <div class="featured-meta">
-          <div class="featured-author">
-            <div class="author-avatar">🖊</div>
-            <span class="author-name">Éloise Marchand</span>
-          </div>
-          <span class="featured-date">12 mai 2026 · 15 min de lecture</span>
-        </div>
-        <p class="featured-excerpt">
-          Traduire un manga, c'est bien plus que transposer des mots. C'est jongler avec des onomatopées intraduisibles, des jeux de mots culturellement ancrés, des niveaux de langage qui n'ont pas d'équivalent exact en français. Mais c'est aussi construire un pont entre deux mondes, deux sensibilités artistiques.
-        </p>
-        <a href="#" class="read-more">Lire l'article complet</a>
+      <div class="entry-body">
+        <p>En ce moment je traduis une chronique de journal. C'est vraiment difficile — je suis bien meilleure sur les dialogues, donc les textes narratifs me prennent beaucoup plus de temps. Chaque phrase semble vouloir résister.</p>
       </div>
+      <div class="entry-footer">Maison du Manga · Journal</div>
     </div>
-  </div>
 
-  <!-- ARTICLES RÉCENTS -->
-  <div class="articles-section">
-    <div class="section-header">
-      <div>
-        <p class="section-label">Actualité</p>
-        <h2 class="section-title">Articles <em>récents</em></h2>
+    <!-- 2 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>15 mai</strong> · 2026</span>
+        <span class="entry-tag tag-manga">Manga</span>
       </div>
-      <a href="#" class="see-all">Tous les articles</a>
+      <div class="entry-body">
+        <p>J'ai montré mon manga à ma famille pour avoir leurs retours — et aussi à l'éditeur. Je ne fais pas ça pour m'amuser : je veux vraiment devenir mangaka. Je sais que c'est difficile, mais je continue.</p>
+        <div class="entry-divider"><span>en ce moment</span></div>
+        <p>Je suis en train d'encrer un manga en 4 pages. En parallèle, je travaille sur le scénario d'un manga en 8 pages — sauf que je n'ai pas encore trouvé l'histoire. Mon cerveau s'épuise à jongler entre traduction anglais-japonais et création de manga en même temps.</p>
+      </div>
+      <div class="entry-footer">Maison du Manga · Journal</div>
     </div>
 
-    <div class="articles-grid">
-
-      <a href="#" class="article-card">
-        <div class="article-card-img a1">📖</div>
-        <p class="article-category">Critique</p>
-        <h3 class="article-title">Chroniques de l'Aube — analyse de l'arc final</h3>
-        <p class="article-excerpt">Après 89 chapitres, la série de Kenji Morita approche de son dénouement. Une analyse des thèmes majeurs et de la symbolique de cette œuvre magistrale.</p>
-        <div class="article-footer">
-          <span class="article-date">10 mai 2026</span>
-          <span class="article-read">8 min</span>
-        </div>
-      </a>
-
-      <a href="#" class="article-card">
-        <div class="article-card-img a2">🎌</div>
-        <p class="article-category">Culture</p>
-        <h3 class="article-title">Les « keigo » : pourquoi le niveau de politesse japonais nous résiste</h3>
-        <p class="article-excerpt">Le japonais possède un système de niveaux de langage sans équivalent en français. Comment nos traducteurs naviguent-ils dans cet univers complexe ?</p>
-        <div class="article-footer">
-          <span class="article-date">8 mai 2026</span>
-          <span class="article-read">12 min</span>
-        </div>
-      </a>
-
-      <a href="#" class="article-card">
-        <div class="article-card-img a3">🌸</div>
-        <p class="article-category">Interview</p>
-        <h3 class="article-title">Rencontre avec Yuki Matsuda, autrice de Sakura Éternelle</h3>
-        <p class="article-excerpt">À l'occasion de la fin de sa série, l'autrice japonaise répond à nos questions sur la création, les influences et l'avenir de ses projets.</p>
-        <div class="article-footer">
-          <span class="article-date">5 mai 2026</span>
-          <span class="article-read">10 min</span>
-        </div>
-      </a>
-
-      <a href="#" class="article-card">
-        <div class="article-card-img a4">🖌</div>
-        <p class="article-category">Technique</p>
-        <h3 class="article-title">La lettrure dans le manga : une science à part entière</h3>
-        <p class="article-excerpt">Placer du texte dans des bulles conçues pour le japonais sans en dénaturer l'esthétique — le défi quotidien de nos lettreurs.</p>
-        <div class="article-footer">
-          <span class="article-date">2 mai 2026</span>
-          <span class="article-read">7 min</span>
-        </div>
-      </a>
-
-      <a href="#" class="article-card">
-        <div class="article-card-img a5">⚔</div>
-        <p class="article-category">Découverte</p>
-        <h3 class="article-title">Vent du Nord : notre nouvelle acquisition incontournable</h3>
-        <p class="article-excerpt">Nous venons d'entamer la traduction d'un shōnen de combat au monde-building exceptionnel. Premier regard sur cette pépite.</p>
-        <div class="article-footer">
-          <span class="article-date">28 avr 2026</span>
-          <span class="article-read">5 min</span>
-        </div>
-      </a>
-
-      <a href="#" class="article-card">
-        <div class="article-card-img a6">🏆</div>
-        <p class="article-category">Événement</p>
-        <h3 class="article-title">Japan Expo 2026 : Maison du Manga sera présente !</h3>
-        <p class="article-excerpt">Pour la première fois, nous aurons un stand à Japan Expo. Venez nous rencontrer et découvrir nos projets en avant-première.</p>
-        <div class="article-footer">
-          <span class="article-date">25 avr 2026</span>
-          <span class="article-read">3 min</span>
-        </div>
-      </a>
-
+    <!-- 3 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>14 mai</strong> · 2026</span>
+        <span class="entry-tag tag-trans">Traduction</span>
+      </div>
+      <div class="entry-body">
+        <p>En cours de traduction, j'ai regardé la feuille de ma voisine : zéro correction. J'étais stupéfaite — et ça m'a donné envie de travailler encore plus dur.</p>
+        <div class="entry-divider"><span>réflexion</span></div>
+        <p>Notre professeure semble tout voir. J'ai d'abord cru qu'elle me lisait dans les pensées… avant de réaliser que tout le monde fait les mêmes erreurs. C'est rassurant et un peu décourageant à la fois.</p>
+      </div>
+      <div class="entry-footer">Maison du Manga · Journal</div>
     </div>
-  </div>
 
-  <!-- SÉLECTION ÉDITORIALE -->
-  <div class="editorial">
-    <p class="section-label" style="color:var(--rouge-french); font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.4em; text-transform:uppercase; margin-bottom:0.5rem; display:flex; align-items:center; gap:1rem;">
-      <span style="display:inline-block;width:30px;height:1px;background:var(--rouge-french)"></span>
-      Nos coups de cœur
-    </p>
-    <h2 style="font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:700; color:var(--blanc);">
-      Sélection <em style="font-style:italic; color:var(--bleu-ciel);">éditoriale</em>
-    </h2>
-
-    <div class="editorial-grid">
-      <a href="#" class="editorial-item">
-        <span class="editorial-num">01</span>
-        <div class="editorial-content">
-          <p class="editorial-cat">Essai</p>
-          <p class="editorial-title">Pourquoi le manga est-il un art total ?</p>
-          <p class="editorial-date">Avr 2026</p>
-        </div>
-      </a>
-
-      <a href="#" class="editorial-item">
-        <span class="editorial-num">02</span>
-        <div class="editorial-content">
-          <p class="editorial-cat">Histoire</p>
-          <p class="editorial-title">Des origines du manga à la mondialisation</p>
-          <p class="editorial-date">Mar 2026</p>
-        </div>
-      </a>
-
-      <a href="#" class="editorial-item">
-        <span class="editorial-num">03</span>
-        <div class="editorial-content">
-          <p class="editorial-cat">Guide</p>
-          <p class="editorial-title">Par où commencer quand on découvre le manga ?</p>
-          <p class="editorial-date">Fév 2026</p>
-        </div>
-      </a>
-
-      <a href="#" class="editorial-item">
-        <span class="editorial-num">04</span>
-        <div class="editorial-content">
-          <p class="editorial-cat">Comparatif</p>
-          <p class="editorial-title">Manga vs. Bande Dessinée : convergences et divergences</p>
-          <p class="editorial-date">Jan 2026</p>
-        </div>
-      </a>
+    <!-- 4 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>10 mai</strong> · 2026</span>
+        <span class="entry-tag tag-movie">Film</span>
+      </div>
+      <div class="entry-body">
+        <p>J'ai regardé <em>Dumbo</em> de Disney. Je ne savais pas que le nom du personnage venait de la contraction de <strong>« dumb »</strong> (muet / stupide) et <strong>« jumbo »</strong> (géant). Un film vraiment attendrissant.</p>
+      </div>
+      <div class="entry-footer">Maison du Manga · Journal</div>
     </div>
-  </div>
+
+    <!-- 5 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>22 avril</strong> · 2026</span>
+        <span class="entry-tag tag-trans">Traduction</span>
+      </div>
+      <div class="entry-body">
+        <p>Les sections de dialogue sont revenues avec presque aucune correction — ça m'a fait vraiment du bien. Ça me confirme que la traduction de manga, c'est peut-être vraiment ce que je veux faire.</p>
+      </div>
+      <div class="entry-footer">Maison du Manga · Journal</div>
+    </div>
+
+    <!-- 6 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>22 avril</strong> · 2026</span>
+        <span class="entry-tag tag-humor">Humour</span>
+      </div>
+      <div class="entry-body">
+        <p>Il paraît que si on traduit un gag avec trop d'enthousiasme, il se fait rejeter. Alors où est la limite du « trop drôle » ? Je ne suis pas sûre qu'il y en ait une — mais j'ai envie d'apprendre à faire mouche sans en faire trop.</p>
+      </div>
+      <div class="entry-footer">Maison du Manga · Journal</div>
+    </div>
+
+    <!-- 7 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>21 avril</strong> · 2026</span>
+        <span class="entry-tag tag-nuance">Nuance</span>
+      </div>
+      <div class="entry-body">
+        <p>Pour moi, la meilleure traduction de :</p>
+        <div class="entry-quote">
+          <span class="ja">「あんたなんか人間じゃない」</span>
+          → <span class="fr">« Tu n'es pas humain. »</span>
+        </div>
+        <p style="margin-top:1rem;">…c'est justement ça. Pas <em>« tu es un monstre »</em>, pas <em>« t'es pas normal »</em> — la froideur du constat direct me semble plus efficace que n'importe quelle métaphore.</p>
+      </div>
+      <div class="entry-footer">Maison du Manga · Journal</div>
+    </div>
+
+    <!-- 8 -->
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>20 avril</strong> · 2026</span>
+        <span class="entry-tag tag-vocab">Vocabulaire</span>
+      </div>
+      <div class="entry-body">
+        <p>Je bute encore sur comment rendre naturellement <strong>« indeed »</strong> et <strong>« How iconic »</strong> en japonais. Pour l'instant, le plan c'est : beaucoup de traductions d'entraînement, en visant la vitesse sans sacrifier la qualité. La régularité fait tout.</p>
+      </div>
+      <div class="entry-footer">Maison du Manga · Journal</div>
+    </div>
+
+  </div><!-- /container -->
 
   <footer>
     <a href="index.html" class="footer-logo">Maison du <span>Manga</span></a>
-    <span class="footer-copy">© 2026 Maison du Manga · Tous droits réservés</span>
+    <span class="footer-copy">© 2026 Maison du Manga · Toutes les traductions sont des œuvres originales</span>
   </footer>
 
+  <script>
+    const ham=document.getElementById('ham'),mob=document.getElementById('mob');
+    ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':'';});
+    mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';}));
+    document.querySelectorAll('.filter-tab').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.filter-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active');}));
+  </script>
 </body>
 </html>
