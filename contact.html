@@ -7,417 +7,122 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bleu-nuit: #0a1628;
-      --bleu-roi: #1a3a6b;
-      --bleu-marine: #2453a0;
-      --bleu-ciel: #4a7fd4;
-      --bleu-pale: #c8d8f0;
-      --rouge-french: #c41e3a;
-      --rouge-accent: #e63950;
-      --or: #c9a84c;
-      --blanc: #fafaf8;
-      --creme: #f4f0e8;
-      --gris: #8a8a8a;
-    }
+    :root{--bleu-nuit:#0a1628;--bleu-roi:#1a3a6b;--bleu-marine:#2453a0;--bleu-ciel:#4a7fd4;--bleu-pale:#c8d8f0;--rouge-french:#c41e3a;--or:#c9a84c;--blanc:#fafaf8;--creme:#f4f0e8;--gris:#8a8a8a;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Cormorant Garamond',serif;background:var(--blanc);color:var(--bleu-nuit);overflow-x:hidden;}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Cormorant Garamond', serif;
-      background: var(--blanc);
-      color: var(--bleu-nuit);
-    }
-
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 4rem; height: 80px;
-      background: rgba(10,22,40,0.97);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(201,168,76,0.3);
-    }
-
-    .nav-logo {
-      font-family: 'Playfair Display', serif; font-size: 1.5rem;
-      font-weight: 900; color: var(--blanc); text-decoration: none;
-    }
-    .nav-logo span { color: var(--rouge-french); }
-
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a {
-      font-family: 'Montserrat', sans-serif; font-size: 0.7rem;
-      font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--bleu-pale); text-decoration: none; transition: color 0.3s;
-      position: relative;
-    }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-      height: 1px; background: var(--rouge-french);
-      transform: scaleX(0); transition: transform 0.3s;
-    }
-    .nav-links a:hover { color: var(--blanc); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-    .nav-links a.active { color: var(--or); }
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:64px;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.3);}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .nav-logo span{color:var(--rouge-french);}
+    .nav-links{display:flex;gap:1.8rem;list-style:none;}
+    .nav-links a{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;transition:color 0.3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--rouge-french);transform:scaleX(0);transition:transform 0.3s;}
+    .nav-links a:hover{color:var(--blanc);}
+    .nav-links a:hover::after{transform:scaleX(1);}
+    .nav-links a.active{color:var(--or);}
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:all 0.3s;border-radius:1px;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{position:fixed;top:64px;left:0;right:0;bottom:0;z-index:190;background:var(--bleu-nuit);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.77,0,0.175,1);}
+    .mobile-menu.open{transform:translateX(0);}
+    .mobile-menu a{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--blanc);text-decoration:none;}
+    .mobile-menu a.active,.mobile-menu a:hover{color:var(--rouge-french);}
+    .mob-line{width:40px;height:1px;background:rgba(201,168,76,0.3);}
 
     /* SPLIT LAYOUT */
-    .contact-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 100vh;
-    }
+    .contact-layout{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 64px);margin-top:64px;}
 
-    /* LEFT PANEL */
-    .contact-left {
-      background: var(--bleu-nuit);
-      padding: 12rem 5rem 5rem;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+    /* LEFT */
+    .contact-left{background:var(--bleu-nuit);padding:4rem 3rem;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;}
+    .contact-left::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(36,83,160,0.4),transparent 60%);}
+    .contact-left-accent{position:absolute;top:0;right:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--rouge-french),transparent);}
+    .cl-content{position:relative;}
+    .cl-kicker{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+    .cl-kicker::before{content:'';width:30px;height:1px;background:var(--rouge-french);}
+    .cl-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:var(--blanc);line-height:1.05;margin-bottom:1.5rem;}
+    .cl-title em{font-style:italic;color:var(--bleu-ciel);}
+    .cl-desc{font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.8;color:var(--bleu-pale);margin-bottom:3rem;}
+    .info-item{display:flex;align-items:flex-start;gap:1.2rem;margin-bottom:1.8rem;}
+    .info-icon{width:40px;height:40px;border:1px solid rgba(201,168,76,0.4);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;color:var(--or);}
+    .info-label{font-family:'Montserrat',sans-serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gris);margin-bottom:0.3rem;}
+    .info-value{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--blanc);}
+    .social-section{position:relative;margin-top:2.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.1);}
+    .social-label{font-family:'Montserrat',sans-serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gris);margin-bottom:1rem;}
+    .social-links{display:flex;gap:0.8rem;flex-wrap:wrap;}
+    .social-link{font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;padding:0.55rem 1rem;border:1px solid rgba(255,255,255,0.15);transition:all 0.2s;}
+    .social-link:hover{background:var(--rouge-french);border-color:var(--rouge-french);color:var(--blanc);}
+    .deco-kanji{position:absolute;bottom:2rem;right:3rem;font-family:sans-serif;font-size:6rem;color:rgba(255,255,255,0.04);writing-mode:vertical-rl;user-select:none;}
 
-    .contact-left::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 30% 60%, rgba(36,83,160,0.4), transparent 60%);
-    }
+    /* RIGHT — FORM */
+    .contact-right{background:var(--creme);padding:4rem 3rem;position:relative;}
+    .contact-right::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(to right,var(--rouge-french),var(--bleu-marine));}
+    .form-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--bleu-nuit);margin-bottom:0.4rem;}
+    .form-title em{font-style:italic;color:var(--bleu-marine);}
+    .form-sub{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--gris);margin-bottom:2.5rem;}
+    .subject-sel{display:flex;gap:0.4rem;margin-bottom:2rem;flex-wrap:wrap;}
+    .subject-btn{font-family:'Montserrat',sans-serif;font-size:0.55rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0.5rem 1rem;border:1px solid var(--bleu-pale);background:transparent;color:var(--gris);cursor:pointer;transition:all 0.2s;}
+    .subject-btn:hover,.subject-btn.active{background:var(--bleu-marine);border-color:var(--bleu-marine);color:var(--blanc);}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+    .form-group{margin-bottom:1.5rem;}
+    .form-label{font-family:'Montserrat',sans-serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--bleu-marine);display:block;margin-bottom:0.4rem;}
+    .form-input,.form-textarea,.form-select{width:100%;padding:0.9rem 1.1rem;border:1px solid var(--bleu-pale);border-bottom:2px solid var(--bleu-pale);background:var(--blanc);color:var(--bleu-nuit);font-family:'Cormorant Garamond',serif;font-size:1rem;outline:none;transition:border-color 0.3s;appearance:none;}
+    .form-input:focus,.form-textarea:focus,.form-select:focus{border-bottom-color:var(--bleu-marine);}
+    .form-input::placeholder,.form-textarea::placeholder{color:#aaa;}
+    .form-textarea{resize:vertical;min-height:120px;line-height:1.6;}
+    .form-check{display:flex;align-items:flex-start;gap:0.8rem;margin-bottom:1.5rem;}
+    .form-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--bleu-marine);cursor:pointer;flex-shrink:0;margin-top:3px;}
+    .form-check-label{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gris);line-height:1.5;}
+    .form-check-label a{color:var(--bleu-marine);}
+    .btn-submit{font-family:'Montserrat',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--blanc);background:var(--bleu-marine);border:2px solid var(--bleu-marine);padding:1rem 2.5rem;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:0.8rem;width:100%;justify-content:center;}
+    .btn-submit:hover{background:var(--rouge-french);border-color:var(--rouge-french);}
+    .btn-submit::after{content:'→';font-size:1rem;}
+    .success-msg{display:none;background:rgba(36,83,160,0.08);border:1px solid var(--bleu-marine);border-left:4px solid var(--rouge-french);padding:1.2rem;margin-top:1.2rem;}
+    .success-msg.show{display:block;}
+    .success-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--bleu-nuit);margin-bottom:0.3rem;}
+    .success-text{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gris);}
 
-    .contact-left-accent {
-      position: absolute;
-      top: 0; right: 0; bottom: 0;
-      width: 3px;
-      background: linear-gradient(to bottom, var(--rouge-french), transparent);
-    }
-
-    .contact-left-content { position: relative; }
-
-    .contact-kicker {
-      font-family: 'Montserrat', sans-serif; font-size: 0.65rem;
-      letter-spacing: 0.35em; text-transform: uppercase;
-      color: var(--rouge-french); margin-bottom: 1.5rem;
-      display: flex; align-items: center; gap: 1rem;
-    }
-    .contact-kicker::before { content: ''; width: 40px; height: 1px; background: var(--rouge-french); }
-
-    .contact-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 4vw, 4rem);
-      font-weight: 900; color: var(--blanc);
-      line-height: 1.05; margin-bottom: 2rem;
-    }
-    .contact-title em { font-style: italic; color: var(--bleu-ciel); }
-
-    .contact-desc {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.15rem; line-height: 1.8;
-      color: var(--bleu-pale); margin-bottom: 4rem;
-    }
-
-    /* CONTACT INFO */
-    .contact-info { position: relative; }
-
-    .contact-info-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .contact-info-icon {
-      width: 44px; height: 44px;
-      border: 1px solid rgba(201,168,76,0.4);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      color: var(--or);
-    }
-
-    .contact-info-label {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; letter-spacing: 0.25em;
-      text-transform: uppercase; color: var(--gris);
-      margin-bottom: 0.3rem;
-    }
-
-    .contact-info-value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.05rem; color: var(--blanc);
-    }
-
-    /* SOCIAL LINKS */
-    .contact-social {
-      position: relative;
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .social-label {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; letter-spacing: 0.25em;
-      text-transform: uppercase; color: var(--gris);
-      margin-bottom: 1rem;
-    }
-
-    .social-links {
-      display: flex; gap: 1rem;
-    }
-
-    .social-link {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.6rem; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--bleu-pale); text-decoration: none;
-      padding: 0.6rem 1.2rem;
-      border: 1px solid rgba(255,255,255,0.15);
-      transition: all 0.2s;
-    }
-
-    .social-link:hover {
-      background: var(--rouge-french);
-      border-color: var(--rouge-french); color: var(--blanc);
-    }
-
-    /* DECORATIVE KANJI */
-    .deco-kanji {
-      position: absolute;
-      bottom: 3rem; right: 4rem;
-      font-family: sans-serif;
-      font-size: 8rem;
-      color: rgba(255,255,255,0.04);
-      writing-mode: vertical-rl;
-      user-select: none;
-    }
-
-    /* RIGHT PANEL — FORM */
-    .contact-right {
-      background: var(--creme);
-      padding: 12rem 5rem 5rem;
-      position: relative;
-    }
-
-    .contact-right::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(to right, var(--rouge-french), var(--bleu-marine));
-    }
-
-    .form-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem; font-weight: 700;
-      color: var(--bleu-nuit); margin-bottom: 0.5rem;
-    }
-    .form-title em { font-style: italic; color: var(--bleu-marine); }
-
-    .form-subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem; font-style: italic;
-      color: var(--gris); margin-bottom: 3rem;
-    }
-
-    /* SUBJECT SELECTOR */
-    .subject-selector {
-      display: flex; gap: 0.5rem; margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-    }
-
-    .subject-btn {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; font-weight: 500;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      padding: 0.6rem 1.2rem;
-      border: 1px solid var(--bleu-pale);
-      background: transparent; color: var(--gris);
-      cursor: pointer; transition: all 0.2s;
-    }
-
-    .subject-btn:hover,
-    .subject-btn.active {
-      background: var(--bleu-marine);
-      border-color: var(--bleu-marine); color: var(--blanc);
-    }
-
-    /* FORM FIELDS */
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 2rem;
-    }
-
-    .form-label {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.55rem; letter-spacing: 0.25em;
-      text-transform: uppercase; color: var(--bleu-marine);
-      display: block; margin-bottom: 0.5rem;
-    }
-
-    .form-input,
-    .form-textarea,
-    .form-select {
-      width: 100%;
-      padding: 1rem 1.2rem;
-      border: 1px solid var(--bleu-pale);
-      border-bottom: 2px solid var(--bleu-pale);
-      background: var(--blanc);
-      color: var(--bleu-nuit);
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
-      appearance: none;
-    }
-
-    .form-input:focus,
-    .form-textarea:focus,
-    .form-select:focus {
-      border-color: var(--bleu-pale);
-      border-bottom-color: var(--bleu-marine);
-    }
-
-    .form-textarea {
-      resize: vertical;
-      min-height: 140px;
-      line-height: 1.6;
-    }
-
-    .form-input::placeholder,
-    .form-textarea::placeholder { color: #aaa; }
-
-    /* CHECKBOX */
-    .form-check {
-      display: flex; align-items: flex-start;
-      gap: 1rem; margin-bottom: 2rem;
-    }
-
-    .form-check input[type="checkbox"] {
-      width: 18px; height: 18px;
-      border: 1px solid var(--bleu-pale);
-      accent-color: var(--bleu-marine);
-      cursor: pointer; flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .form-check-label {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.9rem; color: var(--gris); line-height: 1.5;
-    }
-
-    .form-check-label a {
-      color: var(--bleu-marine); text-decoration: underline;
-    }
-
-    .btn-submit {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--blanc); background: var(--bleu-marine);
-      border: 2px solid var(--bleu-marine);
-      padding: 1.1rem 3rem;
-      cursor: pointer; transition: all 0.3s;
-      display: flex; align-items: center; gap: 1rem;
-    }
-
-    .btn-submit:hover {
-      background: var(--rouge-french);
-      border-color: var(--rouge-french);
-    }
-
-    .btn-submit::after { content: '→'; font-size: 1rem; }
-
-    /* SUCCESS MESSAGE */
-    .success-msg {
-      display: none;
-      background: rgba(36,83,160,0.1);
-      border: 1px solid var(--bleu-marine);
-      border-left: 4px solid var(--rouge-french);
-      padding: 1.5rem;
-      margin-top: 1.5rem;
-    }
-
-    .success-msg.show { display: block; }
-
-    .success-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; font-weight: 700;
-      color: var(--bleu-nuit); margin-bottom: 0.3rem;
-    }
-
-    .success-text {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem; color: var(--gris);
-    }
-
-    /* FAQ SECTION */
-    .faq-section {
-      background: var(--bleu-nuit);
-      padding: 6rem 8rem;
-    }
-
-    .faq-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-
-    .faq-item {
-      padding: 2rem;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-top: 2px solid var(--rouge-french);
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .faq-item:hover { background: rgba(36,83,160,0.2); }
-
-    .faq-q {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem; font-weight: 700;
-      color: var(--blanc); margin-bottom: 0;
-      display: flex; justify-content: space-between;
-      align-items: center;
-    }
-
-    .faq-q::after { content: '+'; color: var(--rouge-french); font-size: 1.2rem; }
-    .faq-item.open .faq-q::after { content: '−'; }
-
-    .faq-a {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 0.95rem; line-height: 1.7;
-      color: var(--bleu-pale);
-      max-height: 0; overflow: hidden;
-      transition: max-height 0.4s ease, padding 0.3s;
-    }
-
-    .faq-item.open .faq-a {
-      max-height: 200px;
-      padding-top: 1rem;
-    }
+    /* FAQ */
+    .faq-section{background:var(--bleu-nuit);padding:4rem 2rem;}
+    .faq-label{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:0.5rem;display:flex;align-items:center;gap:1rem;}
+    .faq-label::before{content:'';width:25px;height:1px;background:var(--rouge-french);}
+    .faq-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,5vw,2.5rem);font-weight:700;color:var(--blanc);margin-bottom:2.5rem;}
+    .faq-title em{font-style:italic;color:var(--bleu-ciel);}
+    .faq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;background:rgba(201,168,76,0.1);}
+    .faq-item{background:var(--bleu-nuit);padding:1.8rem;cursor:pointer;transition:background 0.2s;border-top:2px solid var(--rouge-french);}
+    .faq-item:hover{background:rgba(36,83,160,0.2);}
+    .faq-q{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--blanc);display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;}
+    .faq-q::after{content:'+';color:var(--rouge-french);font-size:1.2rem;flex-shrink:0;}
+    .faq-item.open .faq-q::after{content:'−';}
+    .faq-a{font-family:'Cormorant Garamond',serif;font-size:0.95rem;line-height:1.7;color:var(--bleu-pale);max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s;}
+    .faq-item.open .faq-a{max-height:200px;padding-top:1rem;}
 
     /* FOOTER */
-    footer {
-      background: var(--bleu-nuit);
-      padding: 2rem 8rem;
-      display: flex; justify-content: space-between; align-items: center;
-      border-top: 1px solid rgba(201,168,76,0.2);
-    }
+    footer{background:var(--bleu-nuit);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid rgba(201,168,76,0.2);}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .footer-logo span{color:var(--rouge-french);}
+    .footer-copy{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);}
 
-    .footer-logo {
-      font-family: 'Playfair Display', serif; font-size: 1.2rem;
-      font-weight: 900; color: var(--blanc); text-decoration: none;
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      nav{padding:0 1rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+      .contact-layout{grid-template-columns:1fr;margin-top:64px;}
+      .contact-left{padding:3rem 1.5rem;}
+      .contact-right{padding:3rem 1.5rem;}
+      .cl-title{font-size:2.2rem;}
+      .deco-kanji{display:none;}
+      .contact-left-accent{display:none;}
     }
-    .footer-logo span { color: var(--rouge-french); }
-
-    .footer-copy {
-      font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--gris);
+    @media(max-width:500px){
+      .form-row{grid-template-columns:1fr;}
+      .contact-left{padding:2.5rem 1.2rem;}
+      .contact-right{padding:2.5rem 1.2rem;}
+      .faq-section{padding:3rem 1.2rem;}
+      .faq-grid{grid-template-columns:1fr;}
     }
   </style>
 </head>
@@ -432,52 +137,39 @@
       <li><a href="gallery.html">Galerie</a></li>
       <li><a href="contact.html" class="active">Contact</a></li>
     </ul>
+    <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
+  <div class="mobile-menu" id="mob">
+    <a href="index.html">Accueil</a><div class="mob-line"></div>
+    <a href="translation.html">Traductions</a><div class="mob-line"></div>
+    <a href="blog.html">Blog</a><div class="mob-line"></div>
+    <a href="gallery.html">Galerie</a><div class="mob-line"></div>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
 
-  <!-- MAIN SPLIT LAYOUT -->
+  <!-- SPLIT -->
   <div class="contact-layout">
 
-    <!-- LEFT PANEL -->
+    <!-- LEFT -->
     <div class="contact-left">
       <div class="contact-left-accent"></div>
-      <div class="contact-left-content">
-
-        <p class="contact-kicker">Écrivez-nous</p>
-        <h1 class="contact-title">
-          Parlez-nous<br>
-          de votre <em>passion</em>
-        </h1>
-        <p class="contact-desc">
-          Une question sur nos traductions ? Une suggestion de série ? Une demande de collaboration ? Notre équipe de passionnés vous répondra avec le plus grand soin.
-        </p>
-
-        <div class="contact-info">
-          <div class="contact-info-item">
-            <div class="contact-info-icon">✉</div>
-            <div>
-              <p class="contact-info-label">Email</p>
-              <p class="contact-info-value">contact@maison-du-manga.fr</p>
-            </div>
-          </div>
-
-          <div class="contact-info-item">
-            <div class="contact-info-icon">🕐</div>
-            <div>
-              <p class="contact-info-label">Délai de réponse</p>
-              <p class="contact-info-value">Généralement sous 48h ouvrées</p>
-            </div>
-          </div>
-
-          <div class="contact-info-item">
-            <div class="contact-info-icon">🌍</div>
-            <div>
-              <p class="contact-info-label">Langues acceptées</p>
-              <p class="contact-info-value">Français · Anglais · Japonais</p>
-            </div>
-          </div>
+      <div class="cl-content">
+        <p class="cl-kicker">Écrivez-nous</p>
+        <h1 class="cl-title">Parlez-nous<br>de votre <em>passion</em></h1>
+        <p class="cl-desc">Une question sur nos traductions ? Une suggestion de série ? Une demande de collaboration ? Notre équipe vous répondra avec le plus grand soin.</p>
+        <div class="info-item">
+          <div class="info-icon">✉</div>
+          <div><p class="info-label">Email</p><p class="info-value">contact@maison-du-manga.fr</p></div>
         </div>
-
-        <div class="contact-social">
+        <div class="info-item">
+          <div class="info-icon">🕐</div>
+          <div><p class="info-label">Délai de réponse</p><p class="info-value">Sous 48h ouvrées</p></div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">🌍</div>
+          <div><p class="info-label">Langues</p><p class="info-value">Français · Anglais · Japonais</p></div>
+        </div>
+        <div class="social-section">
           <p class="social-label">Nous suivre</p>
           <div class="social-links">
             <a href="#" class="social-link">Twitter</a>
@@ -486,18 +178,16 @@
           </div>
         </div>
       </div>
-
       <div class="deco-kanji">連絡</div>
     </div>
 
-    <!-- RIGHT PANEL -->
+    <!-- RIGHT -->
     <div class="contact-right">
       <h2 class="form-title">Votre <em>message</em></h2>
-      <p class="form-subtitle">Tous les champs marqués sont requis.</p>
+      <p class="form-sub">Tous les champs marqués * sont requis.</p>
 
-      <!-- SUBJECT -->
-      <div class="subject-selector">
-        <button class="subject-btn active">Question générale</button>
+      <div class="subject-sel">
+        <button class="subject-btn active">Général</button>
         <button class="subject-btn">Traduction</button>
         <button class="subject-btn">Collaboration</button>
         <button class="subject-btn">Signaler une erreur</button>
@@ -505,7 +195,6 @@
       </div>
 
       <form id="contactForm" onsubmit="handleSubmit(event)">
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Prénom *</label>
@@ -516,49 +205,38 @@
             <input type="text" class="form-input" placeholder="Votre nom" required>
           </div>
         </div>
-
         <div class="form-group">
-          <label class="form-label">Adresse email *</label>
+          <label class="form-label">Email *</label>
           <input type="email" class="form-input" placeholder="votre@email.com" required>
         </div>
-
         <div class="form-group">
-          <label class="form-label">Série concernée (facultatif)</label>
+          <label class="form-label">Série concernée</label>
           <select class="form-select form-input">
-            <option value="">— Sélectionner une série —</option>
+            <option value="">— Sélectionner —</option>
             <option>L'Épée du Destin</option>
             <option>Sakura Éternelle</option>
             <option>Chroniques de l'Aube</option>
             <option>Le Gardien du Temps</option>
             <option>Vent du Nord</option>
-            <option>Autre / Non concerné</option>
+            <option>Autre</option>
           </select>
         </div>
-
         <div class="form-group">
-          <label class="form-label">Votre message *</label>
-          <textarea class="form-textarea" placeholder="Décrivez votre demande avec le plus de détails possible..." required></textarea>
+          <label class="form-label">Message *</label>
+          <textarea class="form-textarea" placeholder="Décrivez votre demande..." required></textarea>
         </div>
-
         <div class="form-check">
-          <input type="checkbox" id="newsletter" name="newsletter">
-          <label class="form-check-label" for="newsletter">
-            Je souhaite recevoir la lettre d'information hebdomadaire de Maison du Manga (nouvelles traductions, articles, actualités).
-          </label>
+          <input type="checkbox" id="nl">
+          <label class="form-check-label" for="nl">Je souhaite recevoir la lettre d'information hebdomadaire.</label>
         </div>
-
         <div class="form-check">
-          <input type="checkbox" id="privacy" name="privacy" required>
-          <label class="form-check-label" for="privacy">
-            J'ai lu et j'accepte la <a href="#">politique de confidentialité</a>. Mes données ne seront pas partagées avec des tiers. *
-          </label>
+          <input type="checkbox" id="privacy" required>
+          <label class="form-check-label" for="privacy">J'accepte la <a href="#">politique de confidentialité</a>. *</label>
         </div>
-
         <button type="submit" class="btn-submit">Envoyer le message</button>
-
         <div class="success-msg" id="successMsg">
-          <p class="success-title">✓ Message envoyé avec succès !</p>
-          <p class="success-text">Nous vous répondrons dans les 48 heures ouvrées. Merci pour votre intérêt pour Maison du Manga.</p>
+          <p class="success-title">✓ Message envoyé !</p>
+          <p class="success-text">Nous vous répondrons dans les 48h ouvrées. Merci !</p>
         </div>
       </form>
     </div>
@@ -566,78 +244,48 @@
 
   <!-- FAQ -->
   <div class="faq-section">
-    <p style="font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--rouge-french); margin-bottom:0.5rem; display:flex; align-items:center; gap:1rem;">
-      <span style="display:inline-block;width:30px;height:1px;background:var(--rouge-french)"></span>
-      Questions fréquentes
-    </p>
-    <h2 style="font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:700; color:var(--blanc);">
-      F<em style="font-style:italic;color:var(--bleu-ciel);">AQ</em>
-    </h2>
-
+    <p class="faq-label">Questions fréquentes</p>
+    <h2 class="faq-title">F<em>AQ</em></h2>
     <div class="faq-grid">
       <div class="faq-item" onclick="toggleFaq(this)">
         <p class="faq-q">Comment rejoindre l'équipe de traduction ?</p>
-        <p class="faq-a">Nous recrutons régulièrement des traducteurs passionnés maîtrisant le japonais et le français. Envoyez-nous votre candidature via le formulaire de contact en sélectionnant « Collaboration ». Joignez un exemple de traduction.</p>
+        <p class="faq-a">Envoyez votre candidature via le formulaire en sélectionnant « Collaboration ». Joignez un exemple de traduction du japonais vers le français.</p>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
         <p class="faq-q">Vos traductions sont-elles officielles ?</p>
-        <p class="faq-a">Nos traductions sont réalisées par des fans passionnés à titre non commercial, dans le respect de l'œuvre originale. Nous nous engageons à retirer tout contenu sur demande des ayants droit.</p>
+        <p class="faq-a">Nos traductions sont réalisées par des fans passionnés à titre non commercial. Nous nous engageons à retirer tout contenu sur demande des ayants droit.</p>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
         <p class="faq-q">Puis-je proposer une série à traduire ?</p>
-        <p class="faq-a">Absolument ! Nous sommes toujours à la recherche de nouvelles pépites à partager avec notre communauté francophone. Utilisez le formulaire en sélectionnant « Traduction ».</p>
+        <p class="faq-a">Absolument ! Utilisez le formulaire en sélectionnant « Traduction ». Nous étudions chaque suggestion avec attention.</p>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
-        <p class="faq-q">À quelle fréquence publiez-vous de nouveaux chapitres ?</p>
-        <p class="faq-a">Nous visons au moins deux à trois publications par semaine selon les séries en cours. Abonnez-vous à notre lettre d'information pour être averti de chaque nouvelle publication.</p>
+        <p class="faq-q">À quelle fréquence publiez-vous ?</p>
+        <p class="faq-a">Nous visons deux à trois publications par semaine selon les séries en cours. Abonnez-vous à notre lettre pour être averti en temps réel.</p>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
         <p class="faq-q">Comment signaler une erreur de traduction ?</p>
-        <p class="faq-a">Nous apprécions les retours constructifs. Utilisez le formulaire de contact en sélectionnant « Signaler une erreur » et précisez la série, le chapitre et la page concernés. Nous corrigerons dans les plus brefs délais.</p>
+        <p class="faq-a">Utilisez le formulaire en sélectionnant « Signaler une erreur » et précisez la série, le chapitre et la page. Nous corrigeons rapidement.</p>
       </div>
-
       <div class="faq-item" onclick="toggleFaq(this)">
         <p class="faq-q">Vos contenus sont-ils gratuits ?</p>
-        <p class="faq-a">Oui, l'intégralité de nos traductions est accessible gratuitement. Nous fonctionnons grâce à la passion de notre équipe bénévole. Si vous souhaitez nous soutenir, partagez notre site autour de vous !</p>
+        <p class="faq-a">Oui, tout est gratuit. Nous fonctionnons grâce à la passion de notre équipe bénévole. Partagez notre site autour de vous !</p>
       </div>
     </div>
   </div>
 
   <footer>
     <a href="index.html" class="footer-logo">Maison du <span>Manga</span></a>
-    <span class="footer-copy">© 2026 Maison du Manga · Tous droits réservés</span>
+    <span class="footer-copy">© 2026 Maison du Manga</span>
   </footer>
 
   <script>
-    // Subject selector
-    document.querySelectorAll('.subject-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
-
-    // Form submit
-    function handleSubmit(e) {
-      e.preventDefault();
-      const msg = document.getElementById('successMsg');
-      msg.classList.add('show');
-      document.getElementById('contactForm').querySelectorAll('input, textarea, select, button[type=submit]')
-        .forEach(el => el.disabled = true);
-      msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    // FAQ accordion
-    function toggleFaq(item) {
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
-    }
+    const ham=document.getElementById('ham'),mob=document.getElementById('mob');
+    ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':'';});
+    mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';}));
+    document.querySelectorAll('.subject-btn').forEach(b=>b.addEventListener('click',function(){document.querySelectorAll('.subject-btn').forEach(x=>x.classList.remove('active'));this.classList.add('active');}));
+    function handleSubmit(e){e.preventDefault();const m=document.getElementById('successMsg');m.classList.add('show');document.getElementById('contactForm').querySelectorAll('input,textarea,select,button').forEach(el=>el.disabled=true);m.scrollIntoView({behavior:'smooth',block:'nearest'});}
+    function toggleFaq(item){const o=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));if(!o)item.classList.add('open');}
   </script>
-
 </body>
 </html>
