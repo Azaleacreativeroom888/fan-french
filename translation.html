@@ -3,18 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Journal des Traductions — Maison du Manga</title>
+  <title>Notes de Traduction — Maison du Manga</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bleu-nuit:#0a1628; --bleu-roi:#1a3a6b; --bleu-marine:#2453a0;
-      --bleu-ciel:#4a7fd4; --bleu-pale:#c8d8f0; --rouge-french:#c41e3a;
-      --rouge-light:#fce8eb; --or:#c9a84c; --or-light:#fdf5e0;
+      --bleu-ciel:#4a7fd4; --bleu-pale:#c8d8f0; --bleu-bg:#eef4fc;
+      --rouge-french:#c41e3a; --rouge-light:#fce8eb;
+      --or:#c9a84c; --or-light:#fdf5e0;
       --blanc:#fafaf8; --creme:#f4f0e8; --gris:#8a8a8a;
+      --ombre:rgba(10,22,40,0.12);
     }
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Cormorant Garamond',serif;background:var(--creme);color:var(--bleu-nuit);overflow-x:hidden;}
+    body{
+      font-family:'Cormorant Garamond',serif;
+      background:var(--creme);
+      background-image:
+        repeating-linear-gradient(45deg,rgba(36,83,160,0.04) 0,rgba(36,83,160,0.04) 1px,transparent 0,transparent 50%),
+        repeating-linear-gradient(-45deg,rgba(36,83,160,0.04) 0,rgba(36,83,160,0.04) 1px,transparent 0,transparent 50%);
+      background-size:28px 28px;
+      color:var(--bleu-nuit);
+      overflow-x:hidden;
+    }
 
     /* ── NAV ── */
     nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:64px;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.3);}
@@ -26,8 +37,6 @@
     .nav-links a:hover{color:var(--blanc);}
     .nav-links a:hover::after{transform:scaleX(1);}
     .nav-links a.active{color:var(--or);}
-
-    /* ── HAMBURGER ── */
     .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
     .hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:all 0.3s;border-radius:1px;}
     .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
@@ -40,91 +49,184 @@
     .mob-line{width:40px;height:1px;background:rgba(201,168,76,0.3);}
 
     /* ── PAGE HEADER ── */
-    .page-header{background:var(--bleu-nuit);padding:8rem 2rem 4rem;position:relative;overflow:hidden;}
-    .page-header::after{content:'TRADUCTIONS';position:absolute;right:-1rem;bottom:-2rem;font-family:'Playfair Display',serif;font-size:clamp(4rem,12vw,10rem);font-weight:900;color:rgba(255,255,255,0.03);white-space:nowrap;pointer-events:none;}
-    .ph-kicker{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1rem;display:flex;align-items:center;gap:1rem;}
-    .ph-kicker::before{content:'';width:30px;height:1px;background:var(--rouge-french);}
-    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,8vw,5rem);font-weight:900;color:var(--blanc);line-height:1;}
+    .page-header{background:var(--bleu-nuit);padding:8rem 2rem 3.5rem;position:relative;overflow:hidden;text-align:center;}
+    .page-header::before{
+      content:'翻訳 訳 注 訳 翻訳 注 翻訳 訳 注';
+      position:absolute;bottom:-8px;left:0;right:0;
+      font-size:5rem;opacity:.04;letter-spacing:10px;
+      line-height:1;white-space:nowrap;overflow:hidden;pointer-events:none;
+    }
+    .ph-kicker{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:1rem;}
+    .ph-kicker::before,.ph-kicker::after{content:'';width:30px;height:1px;background:var(--rouge-french);}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,7vw,4.5rem);font-weight:900;color:var(--blanc);line-height:1;position:relative;}
     .page-header h1 em{font-style:italic;color:var(--bleu-ciel);}
-    .page-header-desc{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--bleu-pale);margin-top:1.2rem;max-width:580px;}
+    .page-header-desc{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--bleu-pale);margin-top:1rem;position:relative;}
+
+    /* ── タイルライン ── */
+    .tile-bar{height:6px;background:linear-gradient(to right,var(--rouge-french) 0%,var(--rouge-french) 33%,var(--or) 33%,var(--or) 66%,var(--bleu-marine) 66%,var(--bleu-marine) 100%);}
+
+    /* ── LAYOUT ── */
+    .layout{max-width:1060px;margin:3rem auto 5rem;padding:0 2rem;display:flex;gap:2.5rem;align-items:flex-start;}
+    .main-col{flex:3;min-width:0;}
+    .sidebar-col{flex:1;min-width:220px;}
 
     /* ── FILTER BAR ── */
-    .filter-bar{background:var(--blanc);border-bottom:2px solid var(--bleu-pale);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:sticky;top:64px;z-index:100;}
+    .filter-bar{display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;margin-bottom:2rem;}
     .filter-label{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gris);flex-shrink:0;}
-    .filter-tabs{display:flex;gap:0.5rem;flex-wrap:wrap;}
-    .filter-tab{font-family:'Montserrat',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.45rem 1.1rem;border:2px solid var(--bleu-pale);background:transparent;color:var(--gris);cursor:pointer;border-radius:2px;transition:all 0.2s;}
+    .filter-tabs{display:flex;gap:0.4rem;flex-wrap:wrap;}
+    .filter-tab{font-family:'Montserrat',sans-serif;font-size:0.55rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.4rem 1rem;border:2px solid var(--bleu-pale);background:transparent;color:var(--gris);cursor:pointer;transition:all 0.2s;}
     .filter-tab:hover{border-color:var(--bleu-marine);color:var(--bleu-marine);}
     .filter-tab.active{background:var(--bleu-marine);border-color:var(--bleu-marine);color:var(--blanc);}
-    .filter-tab.active-red{background:var(--rouge-french);border-color:var(--rouge-french);color:var(--blanc);}
 
-    /* ── MAIN CONTAINER ── */
-    .main-wrap{display:grid;grid-template-columns:1fr 300px;gap:0;align-items:start;}
-
-    /* ── ENTRIES ── */
-    .entries-col{padding:3rem 2rem;}
-    .year-group{margin-bottom:3.5rem;}
-    .year-heading{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:900;font-style:italic;color:var(--bleu-pale);margin-bottom:2rem;display:flex;align-items:baseline;gap:1rem;border-bottom:2px solid var(--bleu-pale);padding-bottom:0.8rem;}
-    .year-count{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:400;letter-spacing:0.2em;color:var(--gris);}
-    .entries-list{display:flex;flex-direction:column;gap:1.5rem;}
-
-    /* ── ENTRY CARD ── */
-    .entry-card{background:var(--blanc);border:2px solid var(--bleu-pale);border-radius:0;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;box-shadow:4px 4px 0 var(--bleu-pale);}
-    .entry-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--bleu-pale);}
+    /* ── NOTE CARD ── */
+    .note-card{
+      background:var(--blanc);
+      border:2px solid var(--bleu-pale);
+      box-shadow:5px 5px 0 var(--bleu-pale);
+      margin-bottom:2rem;
+      overflow:hidden;
+      transition:box-shadow 0.2s,transform 0.2s;
+    }
+    .note-card:hover{box-shadow:7px 7px 0 var(--bleu-ciel);transform:translate(-2px,-2px);}
 
     /* カードヘッダー */
-    .entry-header{background:var(--bleu-nuit);border-bottom:2px solid var(--bleu-marine);padding:1rem 1.4rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
-    .entry-header-left{flex:1;}
-    .entry-series{font-family:'Montserrat',sans-serif;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--bleu-ciel);margin-bottom:0.3rem;}
-    .entry-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--blanc);line-height:1.2;}
-    .entry-tag{font-family:'Montserrat',sans-serif;font-size:0.5rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.3rem 0.7rem;flex-shrink:0;align-self:flex-start;white-space:nowrap;}
+    .note-header{
+      background:var(--bleu-nuit);color:var(--blanc);
+      padding:1rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;
+    }
+    .note-number{
+      background:var(--or);color:var(--bleu-nuit);
+      font-family:'Playfair Display',serif;font-weight:900;font-size:0.85rem;
+      border-radius:50%;width:32px;height:32px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .note-jp{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;line-height:1.5;letter-spacing:0.02em;flex:1;}
+    .note-jp small{display:block;font-size:0.75rem;opacity:0.6;font-style:normal;margin-top:4px;letter-spacing:0.5px;text-transform:uppercase;font-family:'Montserrat',sans-serif;}
+
+    /* 翻訳バンド */
+    .note-fr{
+      background:var(--rouge-french);color:var(--blanc);
+      padding:0.9rem 1.5rem 0.9rem 4rem;
+      font-size:1.05rem;font-style:italic;line-height:1.5;
+      border-top:2px solid #a01830;border-bottom:2px solid #a01830;
+      position:relative;
+    }
+    .note-fr::before{content:'🇫🇷';position:absolute;left:1.3rem;top:50%;transform:translateY(-50%);font-size:1.2rem;font-style:normal;}
+
+    /* タグバンド */
+    .note-tag-band{
+      background:var(--bleu-bg);
+      padding:0.6rem 1.5rem;
+      display:flex;align-items:center;gap:0.8rem;
+      border-bottom:1px solid var(--bleu-pale);
+    }
+    .note-tag{
+      font-family:'Montserrat',sans-serif;font-size:0.5rem;font-weight:700;
+      letter-spacing:0.15em;text-transform:uppercase;
+      padding:0.25rem 0.7rem;
+    }
     .tag-trans{background:var(--rouge-french);color:var(--blanc);}
     .tag-knowledge{background:var(--or);color:var(--bleu-nuit);}
-    .tag-note{background:var(--bleu-marine);color:var(--blanc);}
+    .tag-grammar{background:var(--bleu-marine);color:var(--blanc);}
+    .tag-nuance{background:#2a7a4f;color:var(--blanc);}
 
-    /* セクション */
-    .entry-body{padding:0;}
-    .entry-section{padding:1.1rem 1.4rem;border-bottom:1px dashed rgba(10,22,40,0.12);}
-    .entry-section:last-child{border-bottom:none;}
-    .entry-section-label{font-family:'Montserrat',sans-serif;font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;}
-    .label-original{color:var(--bleu-marine);}
-    .label-trans{color:var(--rouge-french);}
-    .label-note{color:var(--or);}
-    .entry-section p{font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.75;color:#333;}
-    .entry-section .original-text{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--bleu-marine);line-height:1.7;}
-    .entry-section .trans-text{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--bleu-nuit);line-height:1.7;}
-    .entry-section .trans-v2{font-family:'Cormorant Garamond',serif;font-size:1rem;color:#555;line-height:1.7;margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid var(--bleu-pale);}
-    .trans-arrow{display:inline-block;color:var(--rouge-french);font-size:1rem;margin:0.5rem 0;font-weight:700;}
-    .entry-section.note-section{background:var(--or-light);}
-    .entry-section.note-section .entry-section-label{color:var(--or);}
-    .entry-section.note-section p{font-size:0.95rem;color:#5a3e00;}
-    .highlight{color:var(--rouge-french);font-weight:700;}
-    .entry-footer{padding:0.7rem 1.4rem;background:var(--creme);border-top:1px solid var(--bleu-pale);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;}
-    .entry-date{font-family:'Montserrat',sans-serif;font-size:0.5rem;color:var(--gris);}
-    .entry-chap{font-family:'Montserrat',sans-serif;font-size:0.5rem;color:var(--bleu-marine);}
+    /* アコーディオントグル */
+    .toggle-btn{
+      background:none;border:none;color:var(--bleu-nuit);cursor:pointer;
+      font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+      padding:0.8rem 1.5rem;width:100%;text-align:left;
+      border-top:1px solid var(--bleu-pale);
+      display:flex;align-items:center;gap:0.5rem;
+      transition:background 0.15s;
+    }
+    .toggle-btn:hover{background:var(--bleu-bg);}
+    .toggle-btn .arrow{margin-left:auto;font-size:0.7rem;transition:transform 0.2s;}
+    .toggle-btn.open .arrow{transform:rotate(180deg);}
+
+    /* 解析ボディ */
+    .note-body{display:none;padding:1.4rem 1.5rem;border-top:1px solid var(--bleu-pale);}
+    .note-body.open{display:block;}
+    .breakdown-title{
+      font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;
+      letter-spacing:0.2em;text-transform:uppercase;color:var(--rouge-french);
+      margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--bleu-pale);
+    }
+
+    /* 単語行 */
+    .word-row{
+      display:grid;grid-template-columns:180px 1fr;
+      gap:0.4rem 1.2rem;margin-bottom:0.9rem;align-items:start;
+    }
+    .word-fr{
+      font-family:'Playfair Display',serif;font-weight:700;
+      color:var(--rouge-french);font-size:0.95rem;line-height:1.4;padding-top:2px;
+    }
+    .word-desc{font-size:0.95rem;line-height:1.75;color:#333;}
+    .word-desc .jp-ref{font-style:italic;opacity:0.65;font-size:0.85rem;}
+    .word-desc .grammar-badge{
+      display:inline-block;background:var(--bleu-bg);color:var(--bleu-marine);
+      border:1px solid var(--bleu-pale);
+      font-size:0.6rem;font-weight:700;font-family:'Montserrat',sans-serif;
+      padding:1px 6px;margin-left:4px;letter-spacing:0.3px;text-transform:uppercase;
+      vertical-align:middle;
+    }
+    .word-row+.word-row{border-top:1px dashed var(--bleu-pale);padding-top:0.9rem;}
+
+    /* ノートメモ */
+    .note-memo{
+      margin-top:1rem;padding:0.9rem 1.2rem;
+      background:var(--or-light);border-left:3px solid var(--or);
+      font-size:0.95rem;line-height:1.75;color:#5a3e00;
+    }
+    .note-memo strong{color:var(--rouge-french);}
+
+    /* アニメーション */
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease;}
+    .revealed{opacity:1;transform:none;}
 
     /* ── SIDEBAR ── */
-    .sidebar{background:var(--blanc);border-left:1px solid var(--bleu-pale);padding:3rem 1.5rem;position:sticky;top:calc(64px + 56px);max-height:calc(100vh - 120px);overflow-y:auto;}
-    .sb-widget{margin-bottom:2.5rem;}
-    .sb-title{font-family:'Montserrat',sans-serif;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.8rem;}
-    .sb-title::before{content:'';width:20px;height:1px;background:var(--rouge-french);}
-    .prog-item{margin-bottom:1.3rem;}
+    .sidebar-block{
+      background:var(--blanc);border:2px solid var(--bleu-pale);
+      box-shadow:4px 4px 0 var(--bleu-pale);
+      padding:1.4rem;margin-bottom:1.5rem;
+      position:sticky;top:80px;
+    }
+    .sidebar-block h3{
+      font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;
+      letter-spacing:0.25em;text-transform:uppercase;color:var(--rouge-french);
+      margin-bottom:1.1rem;padding-bottom:0.6rem;
+      border-bottom:2px solid var(--bleu-pale);
+    }
+    .sidebar-link{
+      display:flex;align-items:center;gap:0.6rem;
+      text-decoration:none;color:var(--bleu-nuit);
+      font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;
+      padding:0.65rem 0.5rem;
+      border-bottom:1px dashed var(--bleu-pale);
+      transition:background 0.2s,color 0.2s,padding-left 0.2s;
+    }
+    .sidebar-link:last-child{border-bottom:none;}
+    .sidebar-link::before{content:'▶';font-size:0.6rem;color:var(--rouge-french);flex-shrink:0;}
+    .sidebar-link:hover{background:var(--bleu-bg);color:var(--rouge-french);padding-left:0.9rem;}
+
+    /* 進捗ブロック */
+    .prog-item{margin-bottom:1.2rem;}
     .prog-info{display:flex;justify-content:space-between;margin-bottom:0.35rem;}
     .prog-series{font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-weight:600;color:var(--bleu-nuit);}
     .prog-pct{font-family:'Montserrat',sans-serif;font-size:0.6rem;color:var(--bleu-marine);}
     .prog-bar{height:3px;background:var(--bleu-pale);}
     .prog-fill{height:100%;background:linear-gradient(to right,var(--bleu-marine),var(--bleu-ciel));}
-    .sb-stat{display:flex;justify-content:space-between;align-items:center;padding:0.7rem 0;border-bottom:1px solid var(--bleu-pale);}
+
+    /* 統計 */
+    .sb-stat{display:flex;justify-content:space-between;align-items:center;padding:0.65rem 0;border-bottom:1px solid var(--bleu-pale);}
     .sb-stat-lbl{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gris);}
     .sb-stat-val{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--bleu-nuit);}
-    .tag-cloud{display:flex;flex-wrap:wrap;gap:0.4rem;}
-    .tag-pill{font-family:'Montserrat',sans-serif;font-size:0.5rem;letter-spacing:0.08em;padding:0.35rem 0.7rem;border:1px solid var(--bleu-pale);color:var(--bleu-marine);cursor:pointer;transition:all 0.2s;}
-    .tag-pill:hover{background:var(--bleu-marine);border-color:var(--bleu-marine);color:var(--blanc);}
 
-    /* 投稿促進バナー */
-    .submit-banner{background:var(--rouge-french);padding:1.5rem;margin-top:2rem;}
-    .submit-banner h4{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--blanc);margin-bottom:0.5rem;}
+    /* お問い合わせバナー */
+    .submit-banner{background:var(--rouge-french);padding:1.4rem;}
+    .submit-banner h4{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--blanc);margin-bottom:0.5rem;}
     .submit-banner p{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:rgba(255,255,255,0.85);line-height:1.6;margin-bottom:1rem;}
-    .submit-banner a{font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--bleu-nuit);background:var(--or);padding:0.6rem 1.2rem;text-decoration:none;display:inline-block;transition:opacity 0.2s;}
+    .submit-banner a{font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--bleu-nuit);background:var(--or);padding:0.6rem 1.1rem;text-decoration:none;display:inline-block;transition:opacity 0.2s;}
     .submit-banner a:hover{opacity:0.85;}
 
     /* ── FOOTER ── */
@@ -133,29 +235,20 @@
     .footer-logo span{color:var(--rouge-french);}
     .footer-copy{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);}
 
-    /* ── ANIMATION ── */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-    .entry-card{animation:fadeUp 0.4s ease both;}
-    .entry-card:nth-child(1){animation-delay:0.05s}
-    .entry-card:nth-child(2){animation-delay:0.12s}
-    .entry-card:nth-child(3){animation-delay:0.19s}
-    .entry-card:nth-child(4){animation-delay:0.26s}
-    .entry-card:nth-child(5){animation-delay:0.33s}
-
     /* ── RESPONSIVE ── */
     @media(max-width:768px){
       nav{padding:0 1rem;}
       .nav-links{display:none;}
       .hamburger{display:flex;}
-      .main-wrap{grid-template-columns:1fr;}
-      .sidebar{border-left:none;border-top:3px solid var(--bleu-pale);padding:2rem 1.2rem;position:static;max-height:none;}
-      .entries-col{padding:2rem 1.2rem;}
-      .filter-bar{top:64px;}
+      .layout{flex-direction:column;padding:0 1.2rem;}
+      .sidebar-col{width:100%;}
+      .sidebar-block{position:static;}
+      .word-row{grid-template-columns:1fr;gap:0.2rem;}
+      .note-header{flex-direction:column;gap:0.5rem;}
     }
     @media(max-width:500px){
       .page-header{padding:7rem 1.2rem 3rem;}
-      .entry-header{flex-direction:column;gap:0.6rem;}
-      .entry-tag{align-self:flex-start;}
+      .note-fr{padding-left:3.2rem;}
     }
   </style>
 </head>
@@ -184,315 +277,355 @@
   <!-- PAGE HEADER -->
   <div class="page-header">
     <p class="ph-kicker">Notre atelier</p>
-    <h1>Journal des <em>Traductions</em></h1>
-    <p class="page-header-desc">Chaque entrée documente un choix de traduction — texte original, version française, et les notes de réflexion du traducteur.</p>
+    <h1>Notes de <em>Traduction</em></h1>
+    <p class="page-header-desc">Dialogue original → Traduction française + Analyse grammaticale</p>
   </div>
+  <div class="tile-bar"></div>
 
-  <!-- FILTER BAR -->
-  <div class="filter-bar">
-    <span class="filter-label">Filtrer :</span>
-    <div class="filter-tabs">
-      <button class="filter-tab active">Tout</button>
-      <button class="filter-tab">Traduction</button>
-      <button class="filter-tab">Mini-savoir</button>
-      <button class="filter-tab">Shōnen</button>
-      <button class="filter-tab">Seinen</button>
-      <button class="filter-tab">Josei</button>
-    </div>
-  </div>
+  <!-- LAYOUT -->
+  <div class="layout">
 
-  <!-- MAIN LAYOUT -->
-  <div class="main-wrap">
+    <!-- ── MAIN ── -->
+    <div class="main-col">
 
-    <!-- ENTRIES -->
-    <div class="entries-col">
-
-      <!-- ── 2026 ── -->
-      <div class="year-group">
-        <div class="year-heading">2026 <span class="year-count">12 entrées</span></div>
-        <div class="entries-list">
-
-          <!-- Entrée 1 : traduction avec problème lexical -->
-          <div class="entry-card">
-            <div class="entry-header">
-              <div class="entry-header-left">
-                <div class="entry-series">L'Épée du Destin · Ch. 247</div>
-                <div class="entry-title">「俺はもう限界だ」— Comment rendre l'épuisement total ?</div>
-              </div>
-              <span class="entry-tag tag-trans">翻訳</span>
-            </div>
-            <div class="entry-body">
-              <div class="entry-section">
-                <div class="entry-section-label label-original">📄 Texte original (japonais)</div>
-                <p class="original-text">俺はもう限界だ。これ以上は無理だ。</p>
-              </div>
-              <div class="entry-section">
-                <div class="entry-section-label label-trans">🇫🇷 Traduction</div>
-                <p class="trans-text">Je suis à bout. C'est impossible d'aller plus loin.</p>
-                <div class="trans-arrow">↓　（version révisée）</div>
-                <p class="trans-v2">Je n'en peux plus. Là, c'est vraiment la limite.</p>
-              </div>
-              <div class="entry-section note-section">
-                <div class="entry-section-label label-note">📝 Note du traducteur</div>
-                <p>
-                  「限界」signifie littéralement « limite » — mais « Je suis à ma limite » sonne très littéral en français.<br>
-                  <span class="highlight">「J'en peux plus »</span> capture mieux l'épuisement émotionnel du personnage dans ce contexte de combat.<br>
-                  「これ以上は無理」= « impossible d'aller plus loin » → trop neutre. « C'est vraiment la limite » conserve l'idée de seuil tout en sonnant naturel.
-                </p>
-              </div>
-            </div>
-            <div class="entry-footer">
-              <span class="entry-date">13 mai 2026</span>
-              <span class="entry-chap">Chapitre 247 — La Forêt des Ombres</span>
-            </div>
-          </div>
-
-          <!-- Entrée 2 : mini-savoir -->
-          <div class="entry-card">
-            <div class="entry-header">
-              <div class="entry-header-left">
-                <div class="entry-series">Mini-savoir</div>
-                <div class="entry-title">「先輩」と「後輩」— une hiérarchie intraduisible ?</div>
-              </div>
-              <span class="entry-tag tag-knowledge">ミニ知識</span>
-            </div>
-            <div class="entry-body">
-              <div class="entry-section">
-                <div class="entry-section-label label-original">📄 Termes japonais</div>
-                <p class="original-text">先輩（senpai）／後輩（kōhai）</p>
-              </div>
-              <div class="entry-section">
-                <div class="entry-section-label label-trans">🇫🇷 Options de traduction</div>
-                <p class="trans-text">
-                  A) Laisser « senpai / kōhai » en japonais et ajouter une note de bas de page.<br>
-                  B) « aîné / cadet » — approximatif mais lisible.<br>
-                  C) « supérieur / subordonné » — trop formel, connotation professionnelle non voulue.
-                </p>
-              </div>
-              <div class="entry-section note-section">
-                <div class="entry-section-label label-note">📝 Note du traducteur</div>
-                <p>
-                  Nous avons opté pour <span class="highlight">l'option A</span> dans les mangas de lycée, car « senpai » fait désormais partie du lexique des lecteurs français habitués au genre.<br>
-                  Pour les titres grand public ou les récits historiques, l'option B reste préférable pour ne pas alourdir la lecture.
-                </p>
-              </div>
-            </div>
-            <div class="entry-footer">
-              <span class="entry-date">10 mai 2026</span>
-              <span class="entry-chap">Note générale — culture manga</span>
-            </div>
-          </div>
-
-          <!-- Entrée 3 : traduction longue avec révision -->
-          <div class="entry-card">
-            <div class="entry-header">
-              <div class="entry-header-left">
-                <div class="entry-series">Chroniques de l'Aube · Ch. 89</div>
-                <div class="entry-title">Le monologue intérieur — rythme et ponctuation</div>
-              </div>
-              <span class="entry-tag tag-trans">翻訳</span>
-            </div>
-            <div class="entry-body">
-              <div class="entry-section">
-                <div class="entry-section-label label-original">📄 Texte original (japonais)</div>
-                <p class="original-text">なぜ俺だけが知っている？なぜ誰も気づかない？この世界には何かが隠されている——俺にはわかる。でも、証明できない。</p>
-              </div>
-              <div class="entry-section">
-                <div class="entry-section-label label-trans">🇫🇷 Traduction v1</div>
-                <p class="trans-text">Pourquoi suis-je le seul à savoir ? Pourquoi personne ne remarque ? Ce monde cache quelque chose — je le sens. Mais je ne peux pas le prouver.</p>
-              </div>
-              <div class="entry-section">
-                <div class="entry-section-label label-trans">🇫🇷 Traduction v2 (révisée)</div>
-                <p class="trans-text">Pourquoi moi seul ? Pourquoi personne d'autre ne voit ? Il y a quelque chose de caché dans ce monde — je le sais. Mais impossible à prouver.</p>
-              </div>
-              <div class="entry-section note-section">
-                <div class="entry-section-label label-note">📝 Note du traducteur</div>
-                <p>
-                  Le monologue japonais est très segmenté — des phrases courtes, percutantes. La v1 est fidèle mais un peu longue.<br>
-                  En v2 : <span class="highlight">suppression du sujet répété</span> (« suis-je le seul à savoir » → « moi seul ? ») pour garder le rythme haché.<br>
-                  「でも、証明できない」→ « Mais impossible à prouver » : l'ellipse du sujet renforce l'effet de pensée fragmentée.
-                </p>
-              </div>
-            </div>
-            <div class="entry-footer">
-              <span class="entry-date">11 mai 2026</span>
-              <span class="entry-chap">Chapitre 89 — Le Dernier Témoin</span>
-            </div>
-          </div>
-
-          <!-- Entrée 4 : mini-savoir sur onomatopées -->
-          <div class="entry-card">
-            <div class="entry-header">
-              <div class="entry-header-left">
-                <div class="entry-series">Mini-savoir</div>
-                <div class="entry-title">Les onomatopées manga — « ドキドキ » en français</div>
-              </div>
-              <span class="entry-tag tag-knowledge">ミニ知識</span>
-            </div>
-            <div class="entry-body">
-              <div class="entry-section">
-                <div class="entry-section-label label-original">📄 Termes japonais</div>
-                <p class="original-text">ドキドキ (doki doki) — palpitations du cœur<br>ふわふわ (fuwa fuwa) — sensation légère, flottante<br>キラキラ (kira kira) — qui brille, qui scintille</p>
-              </div>
-              <div class="entry-section">
-                <div class="entry-section-label label-trans">🇫🇷 Équivalents utilisés</div>
-                <p class="trans-text">
-                  ドキドキ → « Boum-boum » / « le cœur qui s'emballe »<br>
-                  ふわふわ → « léger léger » / « comme sur un nuage »<br>
-                  キラキラ → « tout brillant » / parfois laissé en japonais dans les cases
-                </p>
-              </div>
-              <div class="entry-section note-section">
-                <div class="entry-section-label label-note">📝 Note du traducteur</div>
-                <p>
-                  Le français manque de <span class="highlight">giongo / gitaigo</span> (onomatopées d'état) aussi expressifs que le japonais.<br>
-                  Notre approche : conserver le mot japonais dans la bulle quand l'image est suffisamment éloquente, et utiliser une périphrase dans les dialogues.<br>
-                  Le choix est toujours contextuel — l'humour, le registre et l'âge du personnage influencent la solution retenue.
-                </p>
-              </div>
-            </div>
-            <div class="entry-footer">
-              <span class="entry-date">8 mai 2026</span>
-              <span class="entry-chap">Note générale — techniques de lettrure</span>
-            </div>
-          </div>
-
-          <!-- Entrée 5 -->
-          <div class="entry-card">
-            <div class="entry-header">
-              <div class="entry-header-left">
-                <div class="entry-series">Sakura Éternelle · Ch. 15</div>
-                <div class="entry-title">「好き」— aimer, adorer, ou… aimer d'amour ?</div>
-              </div>
-              <span class="entry-tag tag-trans">翻訳</span>
-            </div>
-            <div class="entry-body">
-              <div class="entry-section">
-                <div class="entry-section-label label-original">📄 Texte original (japonais)</div>
-                <p class="original-text">あなたのことが好きです。ずっと前から。</p>
-              </div>
-              <div class="entry-section">
-                <div class="entry-section-label label-trans">🇫🇷 Options de traduction</div>
-                <p class="trans-text">
-                  A) « Je t'aime bien. Depuis longtemps. » — ambigu (trop amical ?)<br>
-                  B) « Je t'aime. Depuis toujours. » — trop fort pour 「好き」?<br>
-                  C) « Tu me plais. Depuis le début. » — registre naturel pour une confession lycéenne.
-                </p>
-              </div>
-              <div class="entry-section note-section">
-                <div class="entry-section-label label-note">📝 Note du traducteur</div>
-                <p>
-                  「好き」est volontairement ambigu en japonais — c'est sa force dans les scènes de confession.<br>
-                  <span class="highlight">Option C retenue</span> : « Tu me plais » conserve la légèreté et le tremblement du moment sans l'alourdir.<br>
-                  « Depuis le début » plutôt que « depuis longtemps » : 「ずっと前から」suggère une durée indéfinie mais profonde — « depuis le début » est plus poétique en français.
-                </p>
-              </div>
-            </div>
-            <div class="entry-footer">
-              <span class="entry-date">9 mai 2026</span>
-              <span class="entry-chap">Chapitre 15 — Adieu, Printemps (final)</span>
-            </div>
-          </div>
-
-        </div>
-      </div><!-- /year-group 2026 -->
-
-      <!-- ── 2025 ── -->
-      <div class="year-group">
-        <div class="year-heading">2025 <span class="year-count">84 entrées</span></div>
-        <div class="entries-list">
-
-          <div class="entry-card">
-            <div class="entry-header">
-              <div class="entry-header-left">
-                <div class="entry-series">Le Gardien du Temps · Vol. 8</div>
-                <div class="entry-title">「やれやれ」— le soupir universel</div>
-              </div>
-              <span class="entry-tag tag-knowledge">ミニ知識</span>
-            </div>
-            <div class="entry-body">
-              <div class="entry-section">
-                <div class="entry-section-label label-original">📄 Texte original</div>
-                <p class="original-text">やれやれ、また面倒なことになった。</p>
-              </div>
-              <div class="entry-section">
-                <div class="entry-section-label label-trans">🇫🇷 Traduction</div>
-                <p class="trans-text">Pfff... encore des ennuis.</p>
-              </div>
-              <div class="entry-section note-section">
-                <div class="entry-section-label label-note">📝 Note du traducteur</div>
-                <p>
-                  「やれやれ」est une interjection de résignation légèrement amusée — très difficile à rendre.<br>
-                  <span class="highlight">« Pfff »</span> capture bien l'expiration et la lassitude sans dramatiser.<br>
-                  Alternatives envisagées : « Décidément… », « Encore… » — trop neutres. « Bon sang » — trop fort.
-                </p>
-              </div>
-            </div>
-            <div class="entry-footer">
-              <span class="entry-date">20 déc. 2025</span>
-              <span class="entry-chap">Volume 8 — Chapitres 41–50</span>
-            </div>
-          </div>
-
-        </div>
-      </div><!-- /year-group 2025 -->
-
-    </div><!-- /entries-col -->
-
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-
-      <div class="sb-widget">
-        <h3 class="sb-title">Avancement</h3>
-        <div class="prog-item">
-          <div class="prog-info"><span class="prog-series">L'Épée du Destin</span><span class="prog-pct">82%</span></div>
-          <div class="prog-bar"><div class="prog-fill" style="width:82%"></div></div>
-        </div>
-        <div class="prog-item">
-          <div class="prog-info"><span class="prog-series">Chroniques de l'Aube</span><span class="prog-pct">67%</span></div>
-          <div class="prog-bar"><div class="prog-fill" style="width:67%"></div></div>
-        </div>
-        <div class="prog-item">
-          <div class="prog-info"><span class="prog-series">Le Gardien du Temps</span><span class="prog-pct">55%</span></div>
-          <div class="prog-bar"><div class="prog-fill" style="width:55%"></div></div>
-        </div>
-        <div class="prog-item">
-          <div class="prog-info"><span class="prog-series">Vent du Nord</span><span class="prog-pct">3%</span></div>
-          <div class="prog-bar"><div class="prog-fill" style="width:3%"></div></div>
+      <!-- フィルター -->
+      <div class="filter-bar">
+        <span class="filter-label">Filtrer :</span>
+        <div class="filter-tabs">
+          <button class="filter-tab active">Tout</button>
+          <button class="filter-tab">Traduction</button>
+          <button class="filter-tab">Mini-savoir</button>
+          <button class="filter-tab">Grammaire</button>
+          <button class="filter-tab">Nuance</button>
         </div>
       </div>
 
-      <div class="sb-widget">
-        <h3 class="sb-title">Statistiques</h3>
-        <div class="sb-stat"><span class="sb-stat-lbl">Total entrées</span><span class="sb-stat-val">96</span></div>
-        <div class="sb-stat"><span class="sb-stat-lbl">Cette année</span><span class="sb-stat-val">12</span></div>
-        <div class="sb-stat"><span class="sb-stat-lbl">Séries actives</span><span class="sb-stat-val">8</span></div>
-        <div class="sb-stat"><span class="sb-stat-lbl">Traducteurs</span><span class="sb-stat-val">5</span></div>
-      </div>
-
-      <div class="sb-widget">
-        <h3 class="sb-title">Sujets</h3>
-        <div class="tag-cloud">
-          <span class="tag-pill">Onomatopées</span>
-          <span class="tag-pill">Honorifiques</span>
-          <span class="tag-pill">Registre</span>
-          <span class="tag-pill">Rythme</span>
-          <span class="tag-pill">Monologue</span>
-          <span class="tag-pill">Noms propres</span>
-          <span class="tag-pill">Humour</span>
-          <span class="tag-pill">Dialecal</span>
+      <!-- ★ 小説翻訳 -->
+      <div class="note-card reveal">
+        <div class="note-header">
+          <div class="note-number">★</div>
+          <div class="note-jp">
+            「私の人生は、その瞬間から始まったような気がする。」
+            <small>Traduction littéraire / 文学翻訳</small>
+          </div>
+        </div>
+        <div class="note-fr">
+          « Il me semble que ma vie a commencé à cet instant-là. »
+        </div>
+        <div class="note-tag-band">
+          <span class="note-tag tag-trans">Traduction</span>
+          <span class="note-tag tag-grammar">Grammaire</span>
+        </div>
+        <button class="toggle-btn open" onclick="toggleNote(this)">
+          <span>🔍 Analyse des mots et de la grammaire</span><span class="arrow">▼</span>
+        </button>
+        <div class="note-body open">
+          <div class="breakdown-title">Analyse mot à mot</div>
+          <div class="word-row">
+            <div class="word-fr">Il me semble que…</div>
+            <div class="word-desc">
+              「〜のような気がする」に対応。<br>
+              <span class="jp-ref">英語の "It seems to me that…" に相当。</span><br>
+              « Me semble » だけでも成立するが「Il me semble que」の形が文語的で自然。
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">ma vie</div>
+            <div class="word-desc">
+              「私の人生」。<em>vie</em> = 人生・生涯。<span class="grammar-badge">fém.</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">a commencé</div>
+            <div class="word-desc">
+              「始まった」。動詞 <em>commencer</em> の複合過去形。<span class="grammar-badge">passé composé</span><br>
+              <span class="jp-ref">「その瞬間から始まった」という完了した事実を表す。</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">à cet instant-là</div>
+            <div class="word-desc">
+              「その瞬間に」。<em>cet</em> = この（指示形容詞）／<em>instant</em> = 瞬間／<em>-là</em> = そこ（強調）。<br>
+              <span class="jp-ref">「-là」を添えることで「まさにあの瞬間」というニュアンスが強まる。</span>
+            </div>
+          </div>
+          <div class="note-memo">
+            📝 <strong>注記：</strong>「〜ような気がする」は主観的な感覚なので <em>il me semble que</em> が最適。<em>je pense que</em>（〜と思う）より余韻が残る表現。
+          </div>
         </div>
       </div>
 
-      <div class="submit-banner">
-        <h4>Une question de traduction ?</h4>
-        <p>Signalez une erreur ou proposez une meilleure version. Nous adorons les discussions !</p>
-        <a href="contact.html">Écrire à l'équipe →</a>
+      <!-- NOTE 1 -->
+      <div class="note-card reveal">
+        <div class="note-header">
+          <div class="note-number">1</div>
+          <div class="note-jp">
+            「よし！河童を捕まえて一攫千金目指すぞ！」
+            <small>Dialogue manga / セリフ</small>
+          </div>
+        </div>
+        <div class="note-fr">
+          « Bien ! Je vais attraper un kappa et devenir riche d'un seul coup ! »
+        </div>
+        <div class="note-tag-band">
+          <span class="note-tag tag-trans">Traduction</span>
+        </div>
+        <button class="toggle-btn" onclick="toggleNote(this)">
+          <span>🔍 Analyse des mots et de la grammaire</span><span class="arrow">▼</span>
+        </button>
+        <div class="note-body">
+          <div class="breakdown-title">Analyse mot à mot</div>
+          <div class="word-row">
+            <div class="word-fr">Bien !</div>
+            <div class="word-desc">
+              「よし！」に相当する掛け声。<br>
+              <span class="jp-ref">英語の "Alright!" / "Okay!" に近い。</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">Je vais attraper</div>
+            <div class="word-desc">
+              「捕まえるぞ」。<em>aller + infinitif</em> で近未来を表す。<span class="grammar-badge">futur proche</span><br>
+              <span class="jp-ref">「〜するつもりだ」という意志・予告のニュアンス。</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">un kappa</div>
+            <div class="word-desc">
+              「河童」。日本文化固有の概念のため <em>kappa</em> をそのまま使用。<br>
+              <span class="jp-ref">必要に応じて「créature légendaire japonaise」と注記可能。</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">devenir riche</div>
+            <div class="word-desc">
+              「金持ちになる」。<em>devenir</em> = 〜になる ／ <em>riche</em> = 裕福な。
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">d'un seul coup</div>
+            <div class="word-desc">
+              「一攫千金」「一気に」のニュアンス。フランス語の慣用句。<br>
+              <span class="jp-ref"><em>coup</em> = 一撃 ／ <em>seul</em> = たった一つの</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-    </div><!-- /sidebar -->
+      <!-- NOTE 2 -->
+      <div class="note-card reveal">
+        <div class="note-header">
+          <div class="note-number">2</div>
+          <div class="note-jp">
+            「借金作ってなにしてるの？」
+            <small>Dialogue manga / セリフ</small>
+          </div>
+        </div>
+        <div class="note-fr">
+          « Tu as fait des dettes — qu'est-ce que tu fabriques ? »
+        </div>
+        <div class="note-tag-band">
+          <span class="note-tag tag-trans">Traduction</span>
+          <span class="note-tag tag-nuance">Nuance</span>
+        </div>
+        <button class="toggle-btn" onclick="toggleNote(this)">
+          <span>🔍 Analyse des mots et de la grammaire</span><span class="arrow">▼</span>
+        </button>
+        <div class="note-body">
+          <div class="breakdown-title">Analyse mot à mot</div>
+          <div class="word-row">
+            <div class="word-fr">Tu as fait</div>
+            <div class="word-desc">
+              「〜した」。<span class="grammar-badge">passé composé</span><br>
+              <em>as</em> = <em>avoir</em> の2人称単数 ／ <em>fait</em> = <em>faire</em> の過去分詞。
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">des dettes</div>
+            <div class="word-desc">
+              「借金（を）」。<em>dettes</em> = 借金（複数形）<span class="grammar-badge">fém. pl.</span><br>
+              <em>des</em> = 部分冠詞の複数形「いくらかの」。
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">qu'est-ce que tu fabriques ?</div>
+            <div class="word-desc">
+              「何をしてるの？」の口語的表現。<br>
+              <span class="jp-ref"><em>fabriquer</em> は本来「作る」だが、口語では「何をぐずぐずしているの？」のニュアンスになる。<em>Tu fais quoi ?</em> より非難のトーンが強い。</span>
+            </div>
+          </div>
+          <div class="note-memo">
+            📝 <strong>翻訳メモ：</strong>「なにしてるの？」を <em>qu'est-ce que tu fais ?</em> と訳すと中立的すぎる。責める口調を出すために <em>fabriquer</em> を選択。
+          </div>
+        </div>
+      </div>
 
-  </div><!-- /main-wrap -->
+      <!-- NOTE 3 -->
+      <div class="note-card reveal">
+        <div class="note-header">
+          <div class="note-number">3</div>
+          <div class="note-jp">
+            「あんたなんか人間じゃない」
+            <small>Dialogue manga / セリフ</small>
+          </div>
+        </div>
+        <div class="note-fr">
+          « Tu n'es même pas humain. »
+        </div>
+        <div class="note-tag-band">
+          <span class="note-tag tag-nuance">Nuance</span>
+          <span class="note-tag tag-grammar">Grammaire</span>
+        </div>
+        <button class="toggle-btn" onclick="toggleNote(this)">
+          <span>🔍 Analyse des mots et de la grammaire</span><span class="arrow">▼</span>
+        </button>
+        <div class="note-body">
+          <div class="breakdown-title">Analyse mot à mot</div>
+          <div class="word-row">
+            <div class="word-fr">Tu n'es pas</div>
+            <div class="word-desc">
+              否定「〜ではない」。<span class="grammar-badge">négation</span><br>
+              <em>être</em> の2人称単数現在形 <em>es</em> を <em>ne…pas</em> で挟む。
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">même</div>
+            <div class="word-desc">
+              「〜さえも・〜ですら」。強調の副詞。<span class="grammar-badge">adverbe</span><br>
+              <span class="jp-ref">「なんか」の軽蔑・強調ニュアンスに対応。</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">humain</div>
+            <div class="word-desc">
+              「人間」「人間的な」。形容詞・名詞兼用。<span class="grammar-badge">adj. / n.m.</span>
+            </div>
+          </div>
+          <div class="note-memo">
+            📝 <strong>翻訳選択：</strong>「あんたなんか人間じゃない」を <em>« Tu es un monstre »</em>（あなたは怪物だ）と訳す案もある。しかし断言の冷たさを活かすなら <em>« même pas humain »</em> のほうが余韻がある。主語 <em>Tu</em> を残した理由は、省くと攻撃性が弱まるため。
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTE 4 : ミニ知識 -->
+      <div class="note-card reveal">
+        <div class="note-header">
+          <div class="note-number">4</div>
+          <div class="note-jp">
+            「先輩」と「後輩」— une hiérarchie intraduisible ?
+            <small>Mini-savoir / ミニ知識</small>
+          </div>
+        </div>
+        <div class="note-fr">
+          Trois stratégies selon le contexte — aucune n'est universelle.
+        </div>
+        <div class="note-tag-band">
+          <span class="note-tag tag-knowledge">Mini-savoir</span>
+        </div>
+        <button class="toggle-btn" onclick="toggleNote(this)">
+          <span>🔍 Analyse et réflexion</span><span class="arrow">▼</span>
+        </button>
+        <div class="note-body">
+          <div class="breakdown-title">Options de traduction</div>
+          <div class="word-row">
+            <div class="word-fr">A) Laisser en japonais</div>
+            <div class="word-desc">
+              <em>senpai / kōhai</em> をそのまま使用し、脚注で説明。<br>
+              <span class="jp-ref">→ 高校・部活マンガなど、読者が日本文化に慣れている場合に有効。</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">B) « aîné / cadet »</div>
+            <div class="word-desc">
+              「年上・年下」の意味で近似。読みやすいが階層ニュアンスが薄れる。<br>
+              <span class="jp-ref">→ 一般向けタイトルに適切。</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">C) « supérieur / subordonné »</div>
+            <div class="word-desc">
+              職場的なニュアンスが強くなるため学校・部活シーンには不向き。<br>
+              <span class="jp-ref">→ 企業や軍隊を舞台にした作品なら使えることも。</span>
+            </div>
+          </div>
+          <div class="note-memo">
+            📝 当サイトでは高校ものには<strong>A案（senpai/kōhai）</strong>、一般向けには<strong>B案（aîné/cadet）</strong>を採用しています。
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTE 5 -->
+      <div class="note-card reveal">
+        <div class="note-header">
+          <div class="note-number">5</div>
+          <div class="note-jp">
+            「好き」— aimer, adorer, ou aimer d'amour ?
+            <small>Nuance / ニュアンス</small>
+          </div>
+        </div>
+        <div class="note-fr">
+          « Tu me plais. Depuis le début. »
+        </div>
+        <div class="note-tag-band">
+          <span class="note-tag tag-nuance">Nuance</span>
+          <span class="note-tag tag-trans">Traduction</span>
+        </div>
+        <button class="toggle-btn" onclick="toggleNote(this)">
+          <span>🔍 Analyse des mots et de la grammaire</span><span class="arrow">▼</span>
+        </button>
+        <div class="note-body">
+          <div class="breakdown-title">Pourquoi « tu me plais » ?</div>
+          <div class="word-row">
+            <div class="word-fr">A) « Je t'aime bien »</div>
+            <div class="word-desc">
+              友人的な好意に聞こえる可能性がある。告白のシーンでは弱すぎる。
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">B) « Je t'aime »</div>
+            <div class="word-desc">
+              愛の告白として強すぎる。「好き」の曖昧さが失われる。<br>
+              <span class="jp-ref">→ 「愛してる」の訳語として使うべき。</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">C) « Tu me plais »  ✓</div>
+            <div class="word-desc">
+              「あなたは私にとって魅力的だ」→ 好意と恋愛感情の中間。告白の震えるような軽さを保てる。<span class="grammar-badge">採用</span>
+            </div>
+          </div>
+          <div class="word-row">
+            <div class="word-fr">« Depuis le début »</div>
+            <div class="word-desc">
+              「ずっと前から」→「depuis longtemps」より詩的。<br>
+              <span class="jp-ref">「ずっと」の持つ時間の深さを「le début」で表現。</span>
+            </div>
+          </div>
+          <div class="note-memo">
+            📝 「好き」は日本語で意図的に曖昧にされた言葉。フランス語でその曖昧さを再現するには <strong>« tu me plais »</strong> が最も誠実な選択。
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-col -->
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar-col">
+
+      <!-- リンクブロック -->
+      <div class="sidebar-block">
+        <h3>📂 Pages</h3>
+        <a class="sidebar-link" href="grammar.html">文法ノート</a>
+        <a class="sidebar-link" href="novel.html">小説翻訳</a>
+        <a class="sidebar-link" href="studyblog.html">小説のひとことブログ</a>
+        <a class="sidebar-link" href="dictionary.html">辞書</a>
+      </div>
+
+    </aside>
+
+  </div><!-- /layout -->
+
+  <div class="tile-bar"></div>
 
   <footer>
     <a href="index.html" class="footer-logo">Maison du <span>Manga</span></a>
@@ -500,10 +633,26 @@
   </footer>
 
   <script>
+    // ハンバーガー
     const ham=document.getElementById('ham'),mob=document.getElementById('mob');
     ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':'';});
     mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';}));
+
+    // フィルタータブ
     document.querySelectorAll('.filter-tab').forEach(t=>t.addEventListener('click',function(){document.querySelectorAll('.filter-tab').forEach(x=>x.classList.remove('active'));this.classList.add('active');}));
+
+    // アコーディオン
+    function toggleNote(btn){
+      const body=btn.nextElementSibling;
+      body.classList.toggle('open');
+      btn.classList.toggle('open');
+    }
+
+    // スクロールアニメーション
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('revealed');});
+    },{threshold:0.08});
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
   </script>
 </body>
 </html>
