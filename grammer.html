@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes de Grammaire — Maison du Manga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bleu-nuit:#0a1628; --bleu-roi:#1a3a6b; --bleu-marine:#2453a0;
+      --bleu-ciel:#4a7fd4; --bleu-pale:#c8d8f0; --bleu-bg:#eef4fc;
+      --rouge-french:#c41e3a; --rouge-dk:#a01830; --rouge-light:#fce8eb;
+      --or:#c9a84c; --or-light:#fdf5e0; --or-dk:#a07830;
+      --blanc:#fafaf8; --creme:#f4f0e8; --creme-dk:#e8dfc8; --gris:#8a8a8a;
+      --ombre:rgba(10,22,40,0.12);
+    }
+    *, *::before, *::after {box-sizing:border-box;margin:0;padding:0;}
+    body {
+      font-family:'Cormorant Garamond',serif;
+      color:var(--bleu-nuit);
+      background-color:var(--creme);
+      background-image:
+        repeating-linear-gradient(45deg,rgba(36,83,160,.05) 0,rgba(36,83,160,.05) 1px,transparent 0,transparent 50%),
+        repeating-linear-gradient(-45deg,rgba(36,83,160,.05) 0,rgba(36,83,160,.05) 1px,transparent 0,transparent 50%);
+      background-size:28px 28px;
+      overflow-x:hidden;
+    }
+
+    /* ── TILE BAR ── */
+    .tile-bar{height:6px;background:linear-gradient(to right,var(--rouge-french) 0%,var(--rouge-french) 33%,var(--or) 33%,var(--or) 66%,var(--bleu-marine) 66%,var(--bleu-marine) 100%);}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:64px;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.3);}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .nav-logo span{color:var(--rouge-french);}
+    .nav-links{display:flex;gap:1.8rem;list-style:none;}
+    .nav-links a{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;transition:color 0.3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--rouge-french);transform:scaleX(0);transition:transform 0.3s;}
+    .nav-links a:hover{color:var(--blanc);}
+    .nav-links a:hover::after{transform:scaleX(1);}
+    .nav-links a.active{color:var(--or);}
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:all 0.3s;border-radius:1px;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{position:fixed;top:64px;left:0;right:0;bottom:0;z-index:190;background:var(--bleu-nuit);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.77,0,0.175,1);}
+    .mobile-menu.open{transform:translateX(0);}
+    .mobile-menu a{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--blanc);text-decoration:none;}
+    .mobile-menu a:hover{color:var(--rouge-french);}
+    .mob-line{width:40px;height:1px;background:rgba(201,168,76,0.3);}
+
+    /* ── PAGE HEADER ── */
+    .page-header{
+      background:var(--bleu-nuit);color:var(--blanc);
+      text-align:center;padding:8rem 2rem 3.5rem;
+      position:relative;overflow:hidden;
+    }
+    .page-header::before{
+      content:'文法 grammaire 文法 grammaire 文法 grammaire';
+      position:absolute;bottom:-8px;left:0;right:0;
+      font-size:5rem;opacity:.04;letter-spacing:10px;
+      line-height:1;white-space:nowrap;overflow:hidden;pointer-events:none;
+    }
+    .ph-kicker{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:1rem;}
+    .ph-kicker::before,.ph-kicker::after{content:'';width:30px;height:1px;background:var(--rouge-french);}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,7vw,4.5rem);font-weight:900;color:var(--blanc);line-height:1;position:relative;}
+    .page-header h1 em{font-style:italic;color:var(--bleu-ciel);}
+    .page-header p{font-family:'Cormorant Garamond',serif;font-style:italic;opacity:.8;margin-top:.6rem;position:relative;font-size:1.1rem;color:var(--bleu-pale);}
+
+    /* ── LAYOUT ── */
+    .layout{max-width:1060px;margin:3rem auto 5rem;padding:0 2rem;display:flex;gap:2.4rem;align-items:flex-start;}
+    .main-col{flex:3;min-width:0;}
+    .toc{flex:1;min-width:190px;position:sticky;top:80px;}
+
+    /* ── 戻るリンク ── */
+    .back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--rouge-french);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2rem;padding-bottom:4px;border-bottom:1px solid transparent;transition:border-color .2s;}
+    .back-link:hover{border-color:var(--rouge-french);}
+
+    /* ── セクション ── */
+    .grammar-section{margin-bottom:3.5rem;}
+
+    .section-heading{
+      display:flex;align-items:center;gap:1rem;
+      margin-bottom:1.4rem;padding-bottom:.8rem;
+      border-bottom:3px solid var(--or);
+    }
+    .section-num{
+      background:var(--rouge-french);color:var(--blanc);
+      font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;
+      width:36px;height:36px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;box-shadow:2px 2px 0 var(--rouge-dk);
+    }
+    .section-heading h2{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--bleu-nuit);line-height:1.2;}
+    .section-heading .section-sub{font-size:.85rem;color:var(--bleu-marine);font-style:italic;display:block;margin-top:3px;}
+
+    /* ── ルールカード ── */
+    .rule-card{
+      background:var(--blanc);
+      border:2px solid var(--bleu-pale);
+      box-shadow:4px 4px 0 var(--bleu-pale);
+      margin-bottom:1.2rem;
+      overflow:hidden;
+      transition:box-shadow .2s,transform .2s;
+    }
+    .rule-card:hover{box-shadow:6px 6px 0 var(--bleu-ciel);transform:translate(-2px,-2px);}
+
+    .rule-title{
+      background:var(--bleu-nuit);color:var(--blanc);
+      padding:.7rem 1.2rem;
+      font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;
+      display:flex;align-items:center;gap:.6rem;
+    }
+    .rule-title .tag{
+      background:var(--or);color:var(--bleu-nuit);
+      font-family:'Montserrat',sans-serif;
+      font-size:.55rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+      padding:2px 8px;margin-left:auto;flex-shrink:0;
+    }
+
+    .rule-body{padding:1rem 1.2rem;font-size:.95rem;line-height:1.8;}
+    .rule-body p{margin-bottom:.6rem;}
+    .rule-body p:last-child{margin-bottom:0;}
+
+    /* ── 活用表 ── */
+    .conj-table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.88rem;}
+    .conj-table th{
+      background:var(--bleu-nuit);color:var(--or);
+      padding:6px 12px;text-align:left;
+      font-family:'Montserrat',sans-serif;font-weight:700;
+      font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;
+    }
+    .conj-table td{padding:6px 12px;border-bottom:1px solid var(--bleu-pale);vertical-align:top;}
+    .conj-table tr:last-child td{border-bottom:none;}
+    .conj-table tr:nth-child(even) td{background:var(--bleu-bg);}
+    .conj-table .fr{font-style:italic;color:var(--rouge-french);font-weight:700;}
+    .conj-table .jp{color:#3a3060;font-size:.85rem;}
+    .conj-table .note{color:var(--gris);font-size:.82rem;}
+
+    /* ── 例文 ── */
+    .example{
+      background:var(--creme-dk);
+      border-left:4px solid var(--rouge-french);
+      padding:.7rem 1rem;margin:.6rem 0;
+      font-size:.95rem;
+    }
+    .example .ex-fr{font-style:italic;color:var(--bleu-nuit);font-weight:700;}
+    .example .ex-jp{color:#5a4020;font-size:.88rem;margin-top:3px;}
+
+    /* ── ポイント ── */
+    .point{
+      background:var(--or-light);
+      border:2px solid var(--or);
+      padding:.7rem 1rem;margin:.6rem 0;
+      font-size:.9rem;line-height:1.7;
+    }
+    .point::before{content:'💡 ';}
+
+    /* ── 目次（右サイドバー）── */
+    .toc-inner{
+      background:var(--blanc);
+      border:2px solid var(--bleu-pale);
+      box-shadow:4px 4px 0 var(--bleu-pale);
+      padding:1.2rem;
+    }
+    .toc-inner h3{
+      font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;
+      letter-spacing:.25em;text-transform:uppercase;
+      color:var(--rouge-french);
+      margin-bottom:.9rem;padding-bottom:.6rem;
+      border-bottom:2px solid var(--bleu-pale);
+    }
+    .toc-inner a{
+      display:flex;align-items:center;gap:.6rem;
+      color:var(--bleu-nuit);text-decoration:none;
+      font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;
+      padding:.55rem .4rem;
+      border-bottom:1px dashed var(--bleu-pale);
+      transition:background .2s,color .2s,padding-left .2s;
+    }
+    .toc-inner a:last-child{border-bottom:none;}
+    .toc-inner a::before{content:'▶';font-size:.55rem;color:var(--rouge-french);flex-shrink:0;}
+    .toc-inner a:hover{background:var(--bleu-bg);color:var(--rouge-french);padding-left:.7rem;}
+
+    /* ページリンクブロック（目次の下） */
+    .page-links{
+      background:var(--blanc);
+      border:2px solid var(--bleu-pale);
+      box-shadow:4px 4px 0 var(--bleu-pale);
+      padding:1.2rem;
+      margin-top:1.2rem;
+    }
+    .page-links h3{
+      font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;
+      letter-spacing:.25em;text-transform:uppercase;
+      color:var(--rouge-french);
+      margin-bottom:.9rem;padding-bottom:.6rem;
+      border-bottom:2px solid var(--bleu-pale);
+    }
+    .page-links a{
+      display:flex;align-items:center;gap:.6rem;
+      color:var(--bleu-nuit);text-decoration:none;
+      font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;
+      padding:.55rem .4rem;
+      border-bottom:1px dashed var(--bleu-pale);
+      transition:background .2s,color .2s,padding-left .2s;
+    }
+    .page-links a:last-child{border-bottom:none;}
+    .page-links a::before{content:'▶';font-size:.55rem;color:var(--rouge-french);flex-shrink:0;}
+    .page-links a:hover{background:var(--bleu-bg);color:var(--rouge-french);padding-left:.7rem;}
+    .page-links a.current{color:var(--rouge-french);background:var(--rouge-light);}
+
+    /* ── FOOTER ── */
+    footer{background:var(--bleu-nuit);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid rgba(201,168,76,0.2);}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .footer-logo span{color:var(--rouge-french);}
+    .footer-copy{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav{padding:0 1rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+      .layout{flex-direction:column;padding:0 1.2rem;}
+      .toc{position:static;width:100%;min-width:unset;}
+    }
+    @media(max-width:500px){
+      .page-header{padding:7rem 1.2rem 3rem;}
+      .conj-table{font-size:.78rem;}
+      .conj-table th,.conj-table td{padding:5px 8px;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Maison du <span>Manga</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="translation.html" class="active">Traductions</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="gallery.html">Galerie</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mob">
+    <a href="index.html">Accueil</a><div class="mob-line"></div>
+    <a href="translation.html">Traductions</a><div class="mob-line"></div>
+    <a href="blog.html">Blog</a><div class="mob-line"></div>
+    <a href="gallery.html">Galerie</a><div class="mob-line"></div>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="tile-bar"></div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <p class="ph-kicker">Atelier de langue</p>
+    <h1>Notes de <em>Grammaire</em></h1>
+    <p>Grammaire française — référence pour la traduction de manga</p>
+  </div>
+
+  <div class="tile-bar"></div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+
+    <!-- ── 本文（左）── -->
+    <div class="main-col">
+
+      <a class="back-link" href="translation.html">← Retour aux traductions</a>
+
+      <!-- ══ § 1 現在形 ══ -->
+      <section class="grammar-section" id="present">
+        <div class="section-heading">
+          <div class="section-num">1</div>
+          <h2>Présent de l'indicatif<span class="section-sub">現在形 — 動詞の基本活用</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">活用の基本 — -er / -ir / -re <span class="tag">3グループ</span></div>
+          <div class="rule-body">
+            <p>フランス語の動詞は語尾によって3グループに分類される。</p>
+            <table class="conj-table">
+              <tr>
+                <th>人称</th>
+                <th class="fr">-er（parler）</th>
+                <th class="fr">-ir（finir）</th>
+                <th class="fr">-re（vendre）</th>
+              </tr>
+              <tr><td>je</td><td class="fr">parle</td><td class="fr">finis</td><td class="fr">vends</td></tr>
+              <tr><td>tu</td><td class="fr">parles</td><td class="fr">finis</td><td class="fr">vends</td></tr>
+              <tr><td>il/elle</td><td class="fr">parle</td><td class="fr">finit</td><td class="fr">vend</td></tr>
+              <tr><td>nous</td><td class="fr">parlons</td><td class="fr">finissons</td><td class="fr">vendons</td></tr>
+              <tr><td>vous</td><td class="fr">parlez</td><td class="fr">finissez</td><td class="fr">vendez</td></tr>
+              <tr><td>ils/elles</td><td class="fr">parlent</td><td class="fr">finissent</td><td class="fr">vendent</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-fr">Je parle français.</div>
+              <div class="ex-jp">私はフランス語を話す。</div>
+            </div>
+            <div class="point">マンガのセリフでは主語の省略はできない（英語・日本語と違い、フランス語は主語必須）。ただし命令文は例外。</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">不規則動詞（最重要）<span class="tag">irréguliers</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>人称</th><th class="fr">être（〜である）</th><th class="fr">avoir（持つ）</th><th class="fr">faire（する）</th><th class="fr">aller（行く）</th></tr>
+              <tr><td>je</td><td class="fr">suis</td><td class="fr">ai</td><td class="fr">fais</td><td class="fr">vais</td></tr>
+              <tr><td>tu</td><td class="fr">es</td><td class="fr">as</td><td class="fr">fais</td><td class="fr">vas</td></tr>
+              <tr><td>il/elle</td><td class="fr">est</td><td class="fr">a</td><td class="fr">fait</td><td class="fr">va</td></tr>
+              <tr><td>nous</td><td class="fr">sommes</td><td class="fr">avons</td><td class="fr">faisons</td><td class="fr">allons</td></tr>
+              <tr><td>vous</td><td class="fr">êtes</td><td class="fr">avez</td><td class="fr">faites</td><td class="fr">allez</td></tr>
+              <tr><td>ils/elles</td><td class="fr">sont</td><td class="fr">ont</td><td class="fr">font</td><td class="fr">vont</td></tr>
+            </table>
+            <div class="point"><em>être</em> と <em>avoir</em> は複合時制の助動詞としても使う最重要動詞。まず完全に覚えること。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ § 2 複合過去 ══ -->
+      <section class="grammar-section" id="passe-compose">
+        <div class="section-heading">
+          <div class="section-num">2</div>
+          <h2>Passé composé<span class="section-sub">複合過去 — 完了した出来事</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">作り方：avoir / être ＋ 過去分詞 <span class="tag">action accomplie</span></div>
+          <div class="rule-body">
+            <p>完了した一度きりの過去の出来事を表す。英語の過去形・現在完了に相当。</p>
+            <p><strong>avoir + 過去分詞</strong>（ほとんどの他動詞）</p>
+            <div class="example">
+              <div class="ex-fr">J'ai mangé une pizza.</div>
+              <div class="ex-jp">私はピザを食べた。</div>
+            </div>
+            <p><strong>être + 過去分詞</strong>（移動・状態変化の動詞）</p>
+            <div class="example">
+              <div class="ex-fr">Elle est arrivée en retard.</div>
+              <div class="ex-jp">彼女は遅れて到着した。</div>
+            </div>
+            <div class="point"><em>être</em> を使う場合、過去分詞は主語の性・数に合わせて変化する。<br>
+            例：Il est <em>parti</em> ／ Elle est <em>partie</em> ／ Ils sont <em>partis</em></div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">過去分詞の作り方 <span class="tag">participe passé</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>語尾</th><th>過去分詞の語尾</th><th>例</th></tr>
+              <tr><td>-er</td><td class="fr">-é</td><td><span class="fr">parler → parlé</span>　（話した）</td></tr>
+              <tr><td>-ir</td><td class="fr">-i</td><td><span class="fr">finir → fini</span>　（終わった）</td></tr>
+              <tr><td>-re</td><td class="fr">-u</td><td><span class="fr">vendre → vendu</span>　（売った）</td></tr>
+            </table>
+            <div class="point">不規則な過去分詞も多い。<em>faire → fait</em>、<em>écrire → écrit</em>、<em>voir → vu</em>、<em>être → été</em> など。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ § 3 半過去 ══ -->
+      <section class="grammar-section" id="imparfait">
+        <div class="section-heading">
+          <div class="section-num">3</div>
+          <h2>Imparfait<span class="section-sub">半過去 — 継続・状態・習慣</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">使い方と作り方 <span class="tag">état / durée / habitude</span></div>
+          <div class="rule-body">
+            <p>過去の習慣・継続的な状態・背景描写に使う。英語の "used to" や "was doing" に近い。<br>活用は <em>nous</em> 現在形の語幹 ＋ 以下の語尾：</p>
+            <table class="conj-table">
+              <tr><th>人称</th><th>語尾</th><th class="fr">parler の例</th><th class="fr">être の例</th></tr>
+              <tr><td>je</td><td class="fr">-ais</td><td class="fr">parlais</td><td class="fr">étais</td></tr>
+              <tr><td>tu</td><td class="fr">-ais</td><td class="fr">parlais</td><td class="fr">étais</td></tr>
+              <tr><td>il/elle</td><td class="fr">-ait</td><td class="fr">parlait</td><td class="fr">était</td></tr>
+              <tr><td>nous</td><td class="fr">-ions</td><td class="fr">parlions</td><td class="fr">étions</td></tr>
+              <tr><td>vous</td><td class="fr">-iez</td><td class="fr">parliez</td><td class="fr">étiez</td></tr>
+              <tr><td>ils/elles</td><td class="fr">-aient</td><td class="fr">parlaient</td><td class="fr">étaient</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-fr">Quand j'étais enfant, je lisais beaucoup de manga.</div>
+              <div class="ex-jp">子どものころ、よくマンガをたくさん読んでいた。</div>
+            </div>
+            <div class="point">複合過去との違い：<br>
+            複合過去 → 完了した一度の出来事 ／ 半過去 → 継続・習慣・背景の状態<br>
+            マンガの回想シーンは半過去が基本。アクションの一撃は複合過去。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ § 4 未来形 ══ -->
+      <section class="grammar-section" id="futur">
+        <div class="section-heading">
+          <div class="section-num">4</div>
+          <h2>Futur<span class="section-sub">未来形 — 近未来 vs 単純未来</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Futur proche — aller + 不定詞 <span class="tag">intention immédiate</span></div>
+          <div class="rule-body">
+            <p>近い将来・意志の宣言に使う。マンガのセリフに最頻出。</p>
+            <div class="example">
+              <div class="ex-fr">Je vais attraper un kappa et devenir riche !</div>
+              <div class="ex-jp">河童を捕まえて金持ちになるぞ！</div>
+            </div>
+            <div class="point">セリフの「〜するぞ！」は <em>futur proche（je vais…）</em> のほうが自然でリズムが出る。</div>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">Futur simple — 不定詞の語尾変化 <span class="tag">futur lointain</span></div>
+          <div class="rule-body">
+            <p>より遠い未来・予言・約束・ナレーション。やや文語的。</p>
+            <table class="conj-table">
+              <tr><th>人称</th><th>語尾</th><th class="fr">parler の例</th><th class="fr">être の例</th></tr>
+              <tr><td>je</td><td class="fr">-ai</td><td class="fr">parlerai</td><td class="fr">serai</td></tr>
+              <tr><td>tu</td><td class="fr">-as</td><td class="fr">parleras</td><td class="fr">seras</td></tr>
+              <tr><td>il/elle</td><td class="fr">-a</td><td class="fr">parlera</td><td class="fr">sera</td></tr>
+              <tr><td>nous</td><td class="fr">-ons</td><td class="fr">parlerons</td><td class="fr">serons</td></tr>
+              <tr><td>vous</td><td class="fr">-ez</td><td class="fr">parlerez</td><td class="fr">serez</td></tr>
+              <tr><td>ils/elles</td><td class="fr">-ont</td><td class="fr">parleront</td><td class="fr">seront</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-fr">Un jour, je serai le meilleur.</div>
+              <div class="ex-jp">いつか、俺が最強になる。</div>
+            </div>
+            <div class="point">ナレーションボックスや予言シーンでは <em>futur simple</em> が文学的な効果を生む。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ § 5 条件法 ══ -->
+      <section class="grammar-section" id="conditionnel">
+        <div class="section-heading">
+          <div class="section-num">5</div>
+          <h2>Conditionnel<span class="section-sub">条件法 — 丁寧・仮定</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">丁寧な依頼と仮定の結果 <span class="tag">politesse · hypothèse</span></div>
+          <div class="rule-body">
+            <p>丁寧な依頼・願望・非現実の仮定に使う。英語の "would" に近い。</p>
+            <table class="conj-table">
+              <tr><th>人称</th><th>語尾</th><th class="fr">parler の例</th><th class="fr">avoir の例</th><th class="fr">être の例</th></tr>
+              <tr><td>je</td><td class="fr">-ais</td><td class="fr">parlerais</td><td class="fr">aurais</td><td class="fr">serais</td></tr>
+              <tr><td>tu</td><td class="fr">-ais</td><td class="fr">parlerais</td><td class="fr">aurais</td><td class="fr">serais</td></tr>
+              <tr><td>il/elle</td><td class="fr">-ait</td><td class="fr">parlerait</td><td class="fr">aurait</td><td class="fr">serait</td></tr>
+              <tr><td>nous</td><td class="fr">-ions</td><td class="fr">parlerions</td><td class="fr">aurions</td><td class="fr">serions</td></tr>
+              <tr><td>vous</td><td class="fr">-iez</td><td class="fr">parleriez</td><td class="fr">auriez</td><td class="fr">seriez</td></tr>
+              <tr><td>ils/elles</td><td class="fr">-aient</td><td class="fr">parleraient</td><td class="fr">auraient</td><td class="fr">seraient</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-fr">Pourriez-vous m'aider, s'il vous plaît ?</div>
+              <div class="ex-jp">助けていただけますか？</div>
+            </div>
+            <div class="example">
+              <div class="ex-fr">Si j'avais le temps, je viendrais.</div>
+              <div class="ex-jp">時間があれば、来るのに。（非現実の仮定）</div>
+            </div>
+            <div class="point">執事・貴族キャラの丁寧語は conditionnel 必須。「あの時〜していれば…」の悔恨シーンは conditionnel passé（aurait + pp）を使う。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ § 6 接続法 ══ -->
+      <section class="grammar-section" id="subjonctif">
+        <div class="section-heading">
+          <div class="section-num">6</div>
+          <h2>Subjonctif<span class="section-sub">接続法 — 感情・疑念・義務</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">接続法現在の作り方と使い方 <span class="tag">subjonctif présent</span></div>
+          <div class="rule-body">
+            <p>感情・意見・疑い・望みを表す動詞の後ろで使う。<em>que</em>（〜ということ）の後ろに来ることが多い。<br>活用は ils/elles 現在形の語幹 ＋ 以下の語尾：</p>
+            <table class="conj-table">
+              <tr><th>人称</th><th>語尾</th><th class="fr">parler の例</th><th class="fr">être の例</th><th class="fr">avoir の例</th></tr>
+              <tr><td>que je</td><td class="fr">-e</td><td class="fr">parle</td><td class="fr">sois</td><td class="fr">aie</td></tr>
+              <tr><td>que tu</td><td class="fr">-es</td><td class="fr">parles</td><td class="fr">sois</td><td class="fr">aies</td></tr>
+              <tr><td>qu'il/elle</td><td class="fr">-e</td><td class="fr">parle</td><td class="fr">soit</td><td class="fr">ait</td></tr>
+              <tr><td>que nous</td><td class="fr">-ions</td><td class="fr">parlions</td><td class="fr">soyons</td><td class="fr">ayons</td></tr>
+              <tr><td>que vous</td><td class="fr">-iez</td><td class="fr">parliez</td><td class="fr">soyez</td><td class="fr">ayez</td></tr>
+              <tr><td>qu'ils/elles</td><td class="fr">-ent</td><td class="fr">parlent</td><td class="fr">soient</td><td class="fr">aient</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-fr">Il faut que tu sois là !</div>
+              <div class="ex-jp">お前がそこにいなければならない！</div>
+            </div>
+            <div class="example">
+              <div class="ex-fr">Il me semble que ma vie ait commencé à cet instant.</div>
+              <div class="ex-jp">私の人生は、その瞬間から始まったような気がする。</div>
+            </div>
+            <div class="point">接続法を使う主な表現：<em>il faut que, je veux que, je doute que, j'ai peur que, bien que, pour que</em> など。<br>
+            「<em>il faut que</em> + es」ではなく「<em>il faut que</em> + sois」になることに注意。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ § 7 命令形 ══ -->
+      <section class="grammar-section" id="imperatif">
+        <div class="section-heading">
+          <div class="section-num">7</div>
+          <h2>Impératif<span class="section-sub">命令形 — 命令・勧誘・禁止</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">tu / vous / nous への命令 <span class="tag">impératif</span></div>
+          <div class="rule-body">
+            <p>主語なしで動詞の現在形を使う（tu の -er 動詞は語尾の -s を取る）。</p>
+            <table class="conj-table">
+              <tr><th>人称</th><th class="fr">parler</th><th class="fr">finir</th><th class="fr">être</th><th class="fr">avoir</th></tr>
+              <tr><td>tu</td><td class="fr">Parle !</td><td class="fr">Finis !</td><td class="fr">Sois !</td><td class="fr">Aie !</td></tr>
+              <tr><td>vous</td><td class="fr">Parlez !</td><td class="fr">Finissez !</td><td class="fr">Soyez !</td><td class="fr">Ayez !</td></tr>
+              <tr><td>nous</td><td class="fr">Parlons !</td><td class="fr">Finissons !</td><td class="fr">Soyons !</td><td class="fr">Ayons !</td></tr>
+            </table>
+            <div class="example">
+              <div class="ex-fr">Attends ! — Allons-y !</div>
+              <div class="ex-jp">待って！ ― 行こう！</div>
+            </div>
+            <div class="point">否定命令は <em>ne + 動詞 + pas</em>。例：<em>Ne parle pas !</em>（話すな！）<br>
+            マンガのバトルシーンでは短い命令形が多用される。リズムを大切に。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ § 8 否定 ══ -->
+      <section class="grammar-section" id="negation">
+        <div class="section-heading">
+          <div class="section-num">8</div>
+          <h2>Négation<span class="section-sub">否定 — ne…pas と各種否定形</span></h2>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-title">否定の各形式 <span class="tag">formes de négation</span></div>
+          <div class="rule-body">
+            <table class="conj-table">
+              <tr><th>形</th><th>意味</th><th>対応する日本語</th><th>例文</th></tr>
+              <tr>
+                <td class="fr">ne…pas</td><td>〜ない（基本否定）</td><td class="jp">〜じゃない</td>
+                <td><span class="fr">Je ne sais pas.</span></td>
+              </tr>
+              <tr>
+                <td class="fr">ne…plus</td><td>もう〜ない</td><td class="jp">もう〜ない</td>
+                <td><span class="fr">Je ne t'aime plus.</span></td>
+              </tr>
+              <tr>
+                <td class="fr">ne…jamais</td><td>決して〜ない</td><td class="jp">絶対に〜ない</td>
+                <td><span class="fr">Il ne dit jamais la vérité.</span></td>
+              </tr>
+              <tr>
+                <td class="fr">ne…rien</td><td>何も〜ない</td><td class="jp">何も〜ない</td>
+                <td><span class="fr">Je ne vois rien.</span></td>
+              </tr>
+              <tr>
+                <td class="fr">ne…personne</td><td>誰も〜ない</td><td class="jp">誰も〜ない</td>
+                <td><span class="fr">Je ne vois personne.</span></td>
+              </tr>
+              <tr>
+                <td class="fr">ne…que</td><td>〜しか〜ない</td><td class="jp">〜だけ</td>
+                <td><span class="fr">Il ne pense qu'à lui.</span></td>
+              </tr>
+              <tr>
+                <td class="fr">ne…même pas</td><td>〜さえ〜ない</td><td class="jp">〜すらない</td>
+                <td><span class="fr">Tu n'es même pas humain.</span></td>
+              </tr>
+            </table>
+            <div class="point">口語では <em>ne</em> が省略されることが多い。「Je sais pas」=「Je ne sais pas」。<br>
+            マンガのセリフでは <em>ne</em> を省くほうが自然なことが多い。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 新しいセクションはここに追加 -->
+
+    </div><!-- /main-col -->
+
+    <!-- ── 目次（右）── -->
+    <nav class="toc">
+      <div class="toc-inner">
+        <h3>📂 目次</h3>
+        <a href="#present">1. Présent</a>
+        <a href="#passe-compose">2. Passé composé</a>
+        <a href="#imparfait">3. Imparfait</a>
+        <a href="#futur">4. Futur</a>
+        <a href="#conditionnel">5. Conditionnel</a>
+        <a href="#subjonctif">6. Subjonctif</a>
+        <a href="#imperatif">7. Impératif</a>
+        <a href="#negation">8. Négation</a>
+      </div>
+
+      <div class="page-links">
+        <h3>📂 Pages</h3>
+        <a href="grammar.html" class="current">文法ノート</a>
+        <a href="novel.html">小説翻訳</a>
+        <a href="studyblog.html">勉強のひとことブログ</a>
+        <a href="dictionary.html">辞書</a>
+        <a href="translation.html">← 翻訳ログに戻る</a>
+      </div>
+    </nav>
+
+  </div><!-- /layout -->
+
+  <div class="tile-bar"></div>
+
+  <footer>
+    <a href="index.html" class="footer-logo">Maison du <span>Manga</span></a>
+    <span class="footer-copy">© 2026 Maison du Manga · Toutes les traductions sont des œuvres originales</span>
+  </footer>
+
+  <script>
+    // ハンバーガー
+    const ham=document.getElementById('ham'),mob=document.getElementById('mob');
+    ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':'';});
+    mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';}));
+
+    // 目次スムーズスクロール
+    document.querySelectorAll('.toc-inner a, .page-links a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',e=>{
+        const target=document.querySelector(a.getAttribute('href'));
+        if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+      });
+    });
+  </script>
+</body>
+</html>
