@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>勉強のひとことブログ — Maison du Manga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bleu-nuit:#0a1628; --bleu-roi:#1a3a6b; --bleu-marine:#2453a0;
+      --bleu-ciel:#4a7fd4; --bleu-pale:#c8d8f0; --bleu-bg:#eef4fc;
+      --rouge-french:#c41e3a; --rouge-dk:#a01830;
+      --or:#c9a84c; --or-light:#fdf5e0;
+      --blanc:#fafaf8; --creme:#f4f0e8; --creme-dk:#e8dfc8; --gris:#8a8a8a;
+    }
+    *, *::before, *::after {box-sizing:border-box;margin:0;padding:0;}
+    body {
+      font-family:'Cormorant Garamond',serif;
+      color:var(--bleu-nuit);
+      background-color:var(--creme);
+      background-image:
+        repeating-linear-gradient(45deg,rgba(36,83,160,.05) 0,rgba(36,83,160,.05) 1px,transparent 0,transparent 50%),
+        repeating-linear-gradient(-45deg,rgba(36,83,160,.05) 0,rgba(36,83,160,.05) 1px,transparent 0,transparent 50%);
+      background-size:28px 28px;
+      overflow-x:hidden;
+    }
+
+    /* ── TILE BAR ── */
+    .tile-bar{height:6px;background:linear-gradient(to right,var(--rouge-french) 0%,var(--rouge-french) 33%,var(--or) 33%,var(--or) 66%,var(--bleu-marine) 66%,var(--bleu-marine) 100%);}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:64px;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.3);}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .nav-logo span{color:var(--rouge-french);}
+    .nav-links{display:flex;gap:1.8rem;list-style:none;}
+    .nav-links a{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;transition:color 0.3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--rouge-french);transform:scaleX(0);transition:transform 0.3s;}
+    .nav-links a:hover{color:var(--blanc);}
+    .nav-links a:hover::after{transform:scaleX(1);}
+    .nav-links a.active{color:var(--or);}
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:all 0.3s;border-radius:1px;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{position:fixed;top:64px;left:0;right:0;bottom:0;z-index:190;background:var(--bleu-nuit);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.77,0,0.175,1);}
+    .mobile-menu.open{transform:translateX(0);}
+    .mobile-menu a{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--blanc);text-decoration:none;}
+    .mobile-menu a:hover{color:var(--rouge-french);}
+    .mob-line{width:40px;height:1px;background:rgba(201,168,76,0.3);}
+
+    /* ── PAGE HEADER ── */
+    .page-header{
+      background:var(--bleu-nuit);color:var(--blanc);
+      text-align:center;padding:8rem 2rem 3.5rem;
+      position:relative;overflow:hidden;
+    }
+    .page-header::before{
+      content:'✍️ ✍️ ✍️ ✍️ ✍️ ✍️ ✍️ ✍️ ✍️ ✍️';
+      position:absolute;bottom:-6px;left:0;right:0;
+      font-size:3.5rem;opacity:.04;white-space:nowrap;overflow:hidden;
+      letter-spacing:14px;line-height:1.6;pointer-events:none;
+    }
+    .ph-kicker{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:1rem;}
+    .ph-kicker::before,.ph-kicker::after{content:'';width:30px;height:1px;background:var(--rouge-french);}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,7vw,4rem);font-weight:900;color:var(--blanc);line-height:1.1;position:relative;}
+    .page-header h1 em{font-style:italic;color:var(--bleu-ciel);}
+    .page-header p{font-family:'Cormorant Garamond',serif;font-style:italic;opacity:.8;margin-top:.6rem;position:relative;font-size:1.1rem;color:var(--bleu-pale);}
+
+    /* ── CONTAINER ── */
+    .container{max-width:720px;margin:3rem auto 5rem;padding:0 2rem;display:flex;flex-direction:column;gap:1.4rem;}
+
+    /* ── 戻るリンク ── */
+    .back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--rouge-french);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid transparent;transition:border-color .2s;}
+    .back-link:hover{border-color:var(--rouge-french);}
+
+    /* ── ENTRY CARD ── */
+    .entry-card{
+      background:var(--blanc);
+      border:2px solid var(--bleu-pale);
+      box-shadow:5px 5px 0 var(--bleu-pale);
+      overflow:hidden;
+      transition:transform .18s,box-shadow .18s;
+      animation:fadeUp .4s ease both;
+    }
+    .entry-card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--bleu-ciel);}
+    .entry-card:nth-child(2){animation-delay:.05s}
+    .entry-card:nth-child(3){animation-delay:.10s}
+    .entry-card:nth-child(4){animation-delay:.15s}
+    .entry-card:nth-child(5){animation-delay:.20s}
+    .entry-card:nth-child(6){animation-delay:.25s}
+    .entry-card:nth-child(7){animation-delay:.30s}
+    .entry-card:nth-child(8){animation-delay:.35s}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+
+    /* カードヘッダー（日付のみ） */
+    .entry-header{
+      background:var(--bleu-nuit);
+      border-bottom:2px solid var(--bleu-marine);
+      padding:9px 18px;
+      display:flex;align-items:center;
+    }
+    .entry-date{
+      font-family:'Playfair Display',serif;
+      font-size:.95rem;font-weight:700;font-style:italic;
+      letter-spacing:1.5px;color:var(--bleu-pale);
+    }
+    .entry-date strong{color:var(--blanc);font-style:normal;}
+
+    /* カード本文 */
+    .entry-body{padding:1.1rem 1.4rem 1.3rem;}
+    .entry-body p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;line-height:1.85;color:#2a2a2a;}
+    .entry-body strong{color:var(--rouge-french);font-weight:700;}
+    .entry-body em{font-style:italic;color:var(--bleu-marine);}
+
+    /* 区切り線 */
+    .section-divider{display:flex;align-items:center;gap:12px;margin:2px 0;}
+    .section-divider span{font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:var(--bleu-nuit);opacity:.3;}
+    .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--bleu-pale) 0,var(--bleu-pale) 5px,transparent 5px,transparent 10px);}
+
+    /* ── FOOTER ── */
+    footer{background:var(--bleu-nuit);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid rgba(201,168,76,0.2);}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .footer-logo span{color:var(--rouge-french);}
+    .footer-copy{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav{padding:0 1rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+      .container{padding:0 1.2rem;}
+    }
+    @media(max-width:500px){
+      .page-header{padding:7rem 1.2rem 3rem;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Maison du <span>Manga</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="translation.html" class="active">Traductions</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="gallery.html">Galerie</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mob">
+    <a href="index.html">Accueil</a><div class="mob-line"></div>
+    <a href="translation.html">Traductions</a><div class="mob-line"></div>
+    <a href="blog.html">Blog</a><div class="mob-line"></div>
+    <a href="gallery.html">Galerie</a><div class="mob-line"></div>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="tile-bar"></div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <p class="ph-kicker">日々の記録</p>
+    <h1>✍️ 勉強の<em>ひとことブログ</em></h1>
+    <p>日々の勉強メモ — notes quotidiennes</p>
+  </div>
+
+  <div class="tile-bar"></div>
+
+  <!-- CONTAINER -->
+  <div class="container">
+
+    <a class="back-link" href="translation.html">← 翻訳ログに戻る</a>
+
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · 05 · 18</span>
+      </div>
+      <div class="entry-body">
+        <p>今、新聞のコラムを翻訳している。かなり難しい。対話文のほうが得意だから、コラムはずっと時間がかかる。</p>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>•</span></div>
+
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · 05 · 15</span>
+      </div>
+      <div class="entry-body">
+        <p>漫画を家族に見せた。編集さんにも。本気で漫画家になりたい。4ページのペン入れをしながら、8ページのストーリーも考えている。まだアイデアが浮かばない。英日翻訳の勉強と漫画制作を同時進行していると、頭が本当に疲れる。</p>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>•</span></div>
+
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · 05 · 14</span>
+      </div>
+      <div class="entry-body">
+        <p>翻訳の授業で隣の人の紙を見たら、赤が一個もなかった。すごいと思ったし、自分ももっと頑張ろうと思った。先生は何でもお見通しのようで、なぜわかるんだろうと思ったけど、みんな同じ間違いをしているだけだと気づいた。</p>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>•</span></div>
+
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · 05 · 10</span>
+      </div>
+      <div class="entry-body">
+        <p>ディズニーの映画「ダンボ」を観た。ダンボという名前が <strong>「dumb」（口がきけない）</strong>と<strong>「jumbo」（巨大な）</strong>を合わせたものだとは知らなかった。かわいい映画だった。</p>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>•</span></div>
+
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · 04 · 22</span>
+      </div>
+      <div class="entry-body">
+        <p>対話文の部分はほとんど赤が入らなかった。素直にうれしかった。漫画翻訳は本当に自分がやりたいことかもしれないと思い始めている。</p>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>•</span></div>
+
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · 04 · 22</span>
+      </div>
+      <div class="entry-body">
+        <p>ギャグをノリよく訳しすぎると弾かれるらしい。じゃあギャグの「セーフゾーン」ってどこだろう。よくわからないけど、勢いを失わずにうまく着地できるようになりたい。</p>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>•</span></div>
+
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · 04 · 21</span>
+      </div>
+      <div class="entry-body">
+        <p><strong>「あんたなんか人間じゃない」</strong>は、個人的には<strong>「Tu n'es même pas humain.」</strong>が一番しっくりくる。直訳すぎず、でも感情の重さはちゃんと伝わる。</p>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>•</span></div>
+
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · 04 · 20</span>
+      </div>
+      <div class="entry-body">
+        <p><strong>「indeed」</strong>と<strong>「How iconic」</strong>の自然な訳し方にまだ悩んでいる。とにかく練習量を増やして、質を落とさずスピードを上げることを目標にする。慣れるしかない。</p>
+      </div>
+    </div>
+
+    <!-- 追加エントリーはここにコピペで増やす -->
+    <!--
+    <div class="section-divider"><span>•</span></div>
+    <div class="entry-card">
+      <div class="entry-header">
+        <span class="entry-date"><strong>2026</strong> · MM · DD</span>
+      </div>
+      <div class="entry-body">
+        <p>内容をここに書く。</p>
+      </div>
+    </div>
+    -->
+
+  </div>
+
+  <div class="tile-bar"></div>
+
+  <footer>
+    <a href="index.html" class="footer-logo">Maison du <span>Manga</span></a>
+    <span class="footer-copy">© 2026 Maison du Manga · Toutes les traductions sont des œuvres originales</span>
+  </footer>
+
+  <script>
+    const ham=document.getElementById('ham'),mob=document.getElementById('mob');
+    ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':'';});
+    mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';}));
+  </script>
+</body>
+</html>
