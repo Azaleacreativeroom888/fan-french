@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>辞書 — Maison du Manga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bleu-nuit:#0a1628; --bleu-roi:#1a3a6b; --bleu-marine:#2453a0;
+      --bleu-ciel:#4a7fd4; --bleu-pale:#c8d8f0; --bleu-bg:#eef4fc;
+      --rouge-french:#c41e3a; --rouge-dk:#a01830;
+      --or:#c9a84c; --or-light:#fdf5e0;
+      --blanc:#fafaf8; --creme:#f4f0e8; --creme-dk:#e8dfc8; --gris:#8a8a8a;
+    }
+    *, *::before, *::after {box-sizing:border-box;margin:0;padding:0;}
+    body {
+      font-family:'Cormorant Garamond',serif;
+      color:var(--bleu-nuit);
+      background-color:var(--creme);
+      background-image:
+        repeating-linear-gradient(45deg,rgba(36,83,160,.05) 0,rgba(36,83,160,.05) 1px,transparent 0,transparent 50%),
+        repeating-linear-gradient(-45deg,rgba(36,83,160,.05) 0,rgba(36,83,160,.05) 1px,transparent 0,transparent 50%);
+      background-size:28px 28px;
+      overflow-x:hidden;
+    }
+
+    /* ── TILE BAR ── */
+    .tile-bar{height:6px;background:linear-gradient(to right,var(--rouge-french) 0%,var(--rouge-french) 33%,var(--or) 33%,var(--or) 66%,var(--bleu-marine) 66%,var(--bleu-marine) 100%);}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:0 2rem;height:64px;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.3);}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .nav-logo span{color:var(--rouge-french);}
+    .nav-links{display:flex;gap:1.8rem;list-style:none;}
+    .nav-links a{font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--bleu-pale);text-decoration:none;transition:color 0.3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--rouge-french);transform:scaleX(0);transition:transform 0.3s;}
+    .nav-links a:hover{color:var(--blanc);}
+    .nav-links a:hover::after{transform:scaleX(1);}
+    .nav-links a.active{color:var(--or);}
+    .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+    .hamburger span{display:block;width:24px;height:2px;background:var(--blanc);transition:all 0.3s;border-radius:1px;}
+    .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;}
+    .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .mobile-menu{position:fixed;top:64px;left:0;right:0;bottom:0;z-index:190;background:var(--bleu-nuit);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.77,0,0.175,1);}
+    .mobile-menu.open{transform:translateX(0);}
+    .mobile-menu a{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--blanc);text-decoration:none;}
+    .mobile-menu a:hover{color:var(--rouge-french);}
+    .mob-line{width:40px;height:1px;background:rgba(201,168,76,0.3);}
+
+    /* ── PAGE HEADER ── */
+    .page-header{
+      background:var(--bleu-nuit);color:var(--blanc);
+      text-align:center;padding:8rem 2rem 3.5rem;
+      position:relative;overflow:hidden;
+    }
+    .page-header::before{
+      content:'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z';
+      position:absolute;bottom:-8px;left:0;right:0;
+      font-family:'Playfair Display',serif;
+      font-size:4rem;opacity:.04;letter-spacing:8px;
+      line-height:1;white-space:nowrap;overflow:hidden;pointer-events:none;
+    }
+    .ph-kicker{font-family:'Montserrat',sans-serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--rouge-french);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:1rem;}
+    .ph-kicker::before,.ph-kicker::after{content:'';width:30px;height:1px;background:var(--rouge-french);}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,7vw,4.5rem);font-weight:900;color:var(--blanc);line-height:1;position:relative;}
+    .page-header h1 em{font-style:italic;color:var(--bleu-ciel);}
+    .page-header p{font-family:'Cormorant Garamond',serif;font-style:italic;opacity:.8;margin-top:.6rem;position:relative;font-size:1.1rem;color:var(--bleu-pale);}
+
+    /* ── LAYOUT ── */
+    .layout{max-width:1060px;margin:3rem auto 5rem;padding:0 2rem;display:flex;gap:2.4rem;align-items:flex-start;}
+    .main-col{flex:3;min-width:0;}
+    .sidebar-col{flex:1;min-width:200px;position:sticky;top:80px;}
+
+    /* ── 戻るリンク ── */
+    .back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--rouge-french);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:4px;border-bottom:1px solid transparent;transition:border-color .2s;}
+    .back-link:hover{border-color:var(--rouge-french);}
+
+    /* ── 検索ボックス ── */
+    .search-wrap{position:relative;margin-bottom:.8rem;}
+    .search-input{
+      width:100%;background:var(--blanc);
+      border:2px solid var(--bleu-pale);
+      box-shadow:3px 3px 0 var(--bleu-pale);
+      color:var(--bleu-nuit);
+      font-family:'Cormorant Garamond',serif;font-size:1.1rem;
+      padding:12px 44px 12px 16px;outline:none;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    .search-input::placeholder{color:rgba(10,22,40,.3);font-style:italic;}
+    .search-input:focus{border-color:var(--rouge-french);box-shadow:3px 3px 0 var(--rouge-dk);}
+    .search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;}
+    .result-count{font-family:'Montserrat',sans-serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bleu-marine);margin-bottom:1rem;min-height:1.2rem;}
+
+    /* ── 単語カード ── */
+    .word-list{display:flex;flex-direction:column;gap:.8rem;}
+    .word-card{
+      background:var(--blanc);
+      border:2px solid var(--bleu-pale);
+      box-shadow:4px 4px 0 var(--bleu-pale);
+      overflow:hidden;cursor:pointer;
+      transition:transform .15s,box-shadow .15s;
+      position:relative;
+    }
+    .word-card::before{
+      content:'';position:absolute;left:0;top:0;bottom:0;
+      width:4px;background:var(--rouge-french);
+    }
+    .word-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--bleu-ciel);}
+    .word-card.open{border-color:var(--rouge-french);}
+
+    .word-header{
+      display:flex;align-items:center;gap:1rem;
+      padding:.85rem 1rem .85rem 1.2rem;flex-wrap:wrap;
+    }
+    .word-fr-label{
+      font-family:'Playfair Display',serif;
+      font-size:1.05rem;font-weight:700;font-style:italic;
+      color:var(--bleu-nuit);flex:1;
+    }
+    .word-ja-label{
+      font-family:'Cormorant Garamond',serif;
+      font-size:.9rem;font-weight:600;color:var(--bleu-marine);
+    }
+    .word-pos{
+      font-family:'Montserrat',sans-serif;
+      font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      background:var(--bleu-bg);color:var(--bleu-marine);
+      border:1px solid var(--bleu-pale);
+      padding:2px 7px;
+    }
+    .word-arrow{font-size:1rem;color:var(--rouge-french);flex-shrink:0;transition:transform .2s;opacity:.7;}
+    .word-card.open .word-arrow{transform:rotate(90deg);}
+
+    .word-detail{
+      display:none;
+      border-top:1px dashed var(--bleu-pale);
+      margin:0 1rem 0 1.2rem;
+    }
+    .word-card.open .word-detail{display:block;}
+
+    .word-meaning{
+      padding:.9rem 0;font-size:.92rem;line-height:1.85;
+      color:#2a2a2a;border-bottom:1px dashed var(--bleu-pale);
+    }
+    .word-meaning strong{color:var(--rouge-french);}
+
+    .word-example{padding:.8rem 0 1rem;}
+    .word-example .ex-fr{font-style:italic;color:var(--bleu-nuit);font-weight:600;margin-bottom:4px;font-size:.92rem;}
+    .word-example .ex-jp{color:var(--bleu-marine);font-size:.86rem;}
+
+    .no-result{
+      display:none;text-align:center;padding:2.5rem 0;
+      font-family:'Playfair Display',serif;font-size:.9rem;
+      color:var(--rouge-french);opacity:.7;letter-spacing:1px;font-style:italic;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar-block{
+      background:var(--blanc);border:2px solid var(--bleu-pale);
+      box-shadow:4px 4px 0 var(--bleu-pale);
+      padding:1.2rem;margin-bottom:1.2rem;
+    }
+    .sidebar-block h3{
+      font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;
+      letter-spacing:.25em;text-transform:uppercase;color:var(--rouge-french);
+      margin-bottom:.9rem;padding-bottom:.6rem;
+      border-bottom:2px solid var(--bleu-pale);
+    }
+    .sidebar-link{
+      display:flex;align-items:center;gap:.6rem;
+      color:var(--bleu-nuit);text-decoration:none;
+      font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;
+      padding:.55rem .4rem;border-bottom:1px dashed var(--bleu-pale);
+      transition:background .2s,color .2s,padding-left .2s;
+    }
+    .sidebar-link:last-child{border-bottom:none;}
+    .sidebar-link::before{content:'▶';font-size:.55rem;color:var(--rouge-french);flex-shrink:0;}
+    .sidebar-link:hover{background:var(--bleu-bg);color:var(--rouge-french);padding-left:.7rem;}
+    .sidebar-link.current{color:var(--rouge-french);background:rgba(196,30,58,0.06);}
+
+    /* ── FOOTER ── */
+    footer{background:var(--bleu-nuit);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid rgba(201,168,76,0.2);}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--blanc);text-decoration:none;}
+    .footer-logo span{color:var(--rouge-french);}
+    .footer-copy{font-family:'Montserrat',sans-serif;font-size:0.55rem;color:var(--gris);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav{padding:0 1rem;}
+      .nav-links{display:none;}
+      .hamburger{display:flex;}
+      .layout{flex-direction:column;padding:0 1.2rem;}
+      .sidebar-col{position:static;width:100%;}
+    }
+    @media(max-width:500px){
+      .page-header{padding:7rem 1.2rem 3rem;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Maison du <span>Manga</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="translation.html" class="active">Traductions</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="gallery.html">Galerie</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mob">
+    <a href="index.html">Accueil</a><div class="mob-line"></div>
+    <a href="translation.html">Traductions</a><div class="mob-line"></div>
+    <a href="blog.html">Blog</a><div class="mob-line"></div>
+    <a href="gallery.html">Galerie</a><div class="mob-line"></div>
+    <a href="contact.html">Contact</a>
+  </div>
+
+  <div class="tile-bar"></div>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <p class="ph-kicker">個人辞書</p>
+    <h1>📖 <em>辞書</em></h1>
+    <p>クリックで解説・例文を表示</p>
+  </div>
+
+  <div class="tile-bar"></div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+
+    <!-- ── メイン ── -->
+    <div class="main-col">
+      <a class="back-link" href="translation.html">← 翻訳ログに戻る</a>
+
+      <div class="search-wrap">
+        <input class="search-input" type="text" id="searchInput"
+          placeholder="単語を検索…" oninput="filterWords()" autocomplete="off">
+        <span class="search-icon">🔍</span>
+      </div>
+      <p class="result-count" id="resultCount"></p>
+      <div class="word-list" id="wordList"></div>
+      <p class="no-result" id="noResult">見つかりませんでした。</p>
+    </div>
+
+    <!-- ── サイドバー ── -->
+    <aside class="sidebar-col">
+      <div class="sidebar-block">
+        <h3>📂 ページ</h3>
+        <a class="sidebar-link" href="grammar.html">文法ノート</a>
+        <a class="sidebar-link" href="novel.html">小説翻訳</a>
+        <a class="sidebar-link" href="studyblog.html">勉強のひとことブログ</a>
+        <a class="sidebar-link current" href="dictionary.html">辞書</a>
+        <a class="sidebar-link" href="translation.html">← 翻訳ログに戻る</a>
+      </div>
+
+      <div class="sidebar-block" style="background:var(--bleu-nuit);border-color:var(--bleu-marine);box-shadow:4px 4px 0 var(--bleu-marine);">
+        <h3 style="color:var(--or);">💡 使い方</h3>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:.95rem;line-height:1.7;color:var(--bleu-pale);">検索ボックスに単語・日本語訳・キーワードを入力するとリアルタイムで絞り込めます。カードをクリックすると解説と例文が開きます。</p>
+      </div>
+    </aside>
+
+  </div>
+
+  <div class="tile-bar"></div>
+
+  <footer>
+    <a href="index.html" class="footer-logo">Maison du <span>Manga</span></a>
+    <span class="footer-copy">© 2026 Maison du Manga · Toutes les traductions sont des œuvres originales</span>
+  </footer>
+
+  <script>
+    const words = [
+      { fr: "il me semble que", pos: "表現",
+        ja: "〜のような気がする・〜と思われる",
+        meaning: '英語の "it seems to me that…" に相当。<strong>「〜ような気がする」</strong>の主観的な感覚を表す。<em>que</em> の後ろは接続法（subjonctif）になることが多い。<em>me semble</em> だけでも成立するが、<em>il me semble que</em> の形が文語的で自然。',
+        exFr: "Il me semble que ma vie a commencé à cet instant-là.",
+        exJa: "私の人生は、その瞬間から始まったような気がする。" },
+
+      { fr: "même pas", pos: "副詞",
+        ja: "〜さえもない・〜ですら",
+        meaning: '強調の否定を表す。<strong>ne…même pas</strong> で「〜さえも…ない」というニュアンスを加える。英語の "not even" に相当。',
+        exFr: "Tu n'es même pas humain.",
+        exJa: "あんたなんか人間じゃない。" },
+
+      { fr: "se plaire", pos: "動詞",
+        ja: "気に入る・好きになる",
+        meaning: '反射代名詞動詞。<strong>tu me plais</strong> = 「あなたは私のお気に入りだ（あなたが好きだ）」。告白シーンで <em>je t\'aime</em> より軽く自然な表現として使える。',
+        exFr: "Tu me plais depuis le début.",
+        exJa: "最初からあなたのことが好きだった。" },
+
+      { fr: "subjonctif", pos: "文法用語",
+        ja: "接続法",
+        meaning: '感情・疑念・義務・願望を表す動詞の後ろで使う法（mode）。<em>il faut que, je veux que, bien que</em> などの後ろに続く。<strong>être</strong> の接続法現在は <em>sois / soit / soyons / soyez / soient</em>。',
+        exFr: "Il faut que tu sois là !",
+        exJa: "お前がそこにいなければならない！" },
+
+      { fr: "passé composé", pos: "文法用語",
+        ja: "複合過去",
+        meaning: '完了した一度きりの過去の出来事を表す。<strong>avoir または être + 過去分詞</strong> で作る。英語の過去形・現在完了に相当。移動・状態変化の動詞は <em>être</em> を使い、過去分詞が主語に性数一致する。',
+        exFr: "Elle est arrivée en retard.",
+        exJa: "彼女は遅れて到着した。" },
+
+      { fr: "imparfait", pos: "文法用語",
+        ja: "半過去",
+        meaning: '過去の習慣・継続的な状態・背景描写に使う。英語の "used to" や "was doing" に近い。活用語尾：<strong>-ais / -ais / -ait / -ions / -iez / -aient</strong>。複合過去と組み合わせて場面を描写する。',
+        exFr: "Quand j\'étais enfant, je lisais beaucoup de manga.",
+        exJa: "子どものころ、よくマンガをたくさん読んでいた。" },
+
+      { fr: "futur proche", pos: "文法用語",
+        ja: "近未来（aller + 不定詞）",
+        meaning: '<strong>aller の現在形 + 不定詞</strong> で作る。近い将来・意志の宣言に使う。マンガのセリフに最頻出。英語の "going to" に相当。<em>futur simple</em> より口語的でリズムが出る。',
+        exFr: "Je vais attraper un kappa et devenir riche !",
+        exJa: "河童を捕まえて金持ちになるぞ！" },
+
+      { fr: "conditionnel", pos: "文法用語",
+        ja: "条件法",
+        meaning: '丁寧な依頼・願望・非現実の仮定に使う。英語の "would" に近い。活用語尾：<strong>-ais / -ais / -ait / -ions / -iez / -aient</strong>（半過去と同じ語尾）。<em>Si + imparfait, conditionnel</em> の構文で仮定を表す。',
+        exFr: "Pourriez-vous m'aider, s'il vous plaît ?",
+        exJa: "助けていただけますか？" },
+
+      { fr: "tu / vous", pos: "代名詞",
+        ja: "二人称（親称 / 敬称）",
+        meaning: '<strong>tu</strong>（tutoiement）＝ 親しい間柄・友人・家族・同年代。<strong>vous</strong>（vouvoiement）＝ 敬語・初対面・目上・複数。マンガでは <em>vous → tu</em> への変化が親密さの増加、<em>tu → vous</em> が皮肉や決裂を表す演出に使われる。',
+        exFr: "Tu viens ? / Vous venez ?",
+        exJa: "来る？ / いらっしゃいますか？" },
+
+      { fr: "fabriquer", pos: "動詞",
+        ja: "作る・（口語）何をぐずぐずしているの",
+        meaning: '本来は「製造する・作る」の意味。口語では <strong>「何をやっているの？」「何をぐずぐずしているの？」</strong> の意味になる。<em>qu\'est-ce que tu fabriques ?</em> は <em>qu\'est-ce que tu fais ?</em> より非難のトーンが強い。',
+        exFr: "Qu\'est-ce que tu fabriques ?",
+        exJa: "何をしてるの？（＝何をぐずぐずしてるの？）" },
+
+      { fr: "ne…que", pos: "否定表現",
+        ja: "〜しか〜ない・〜だけ",
+        meaning: '制限の否定。<em>seulement</em>（だけ）と同じ意味だが、より文語的・感情的。<strong>ne + 動詞 + que + 制限される要素</strong> の語順になる。',
+        exFr: "Il ne pense qu'à lui-même.",
+        exJa: "彼は自分のことしか考えない。" },
+
+      { fr: "depuis", pos: "前置詞",
+        ja: "〜から・〜以来・〜前から",
+        meaning: '過去のある時点から現在まで続く状態・行為を表す。<strong>depuis + 期間</strong> で「〜の間ずっと」、<strong>depuis + 時点</strong> で「〜以来ずっと」。現在形・複合過去と組み合わせる。',
+        exFr: "Tu me plais depuis le début.",
+        exJa: "最初からあなたのことが好きだった。" },
+
+      { fr: "quoi", pos: "疑問詞",
+        ja: "何・何だって",
+        meaning: '口語での「何？」。<em>qu\'est-ce que</em> の短縮形として使われる。驚きのときは <strong>Quoi !?</strong> で「えっ！？」に相当。文末に置いて「〜ってどういうこと？」のニュアンスにもなる。',
+        exFr: "Quoi !? C\'est impossible !",
+        exJa: "えっ！？ありえない！" },
+
+      { fr: "solipsisme", pos: "名詞",
+        ja: "独我論・唯我論",
+        meaning: '哲学用語。<strong>自己とその所産だけが実在する</strong>という立場。「唯我論的」より「独我論的」が正確な訳。<em>solipsistic</em>（英）= <em>solipsiste</em>（仏）。翻訳で混同しやすい難語。',
+        exFr: "Les délires solipsistes sont souvent le signe d\'une insensibilité générale.",
+        exJa: "独我論的妄想は、全般的な鈍感さの初期症状とみなされることが多い。" },
+
+      { fr: "indeed", pos: "副詞（英語）",
+        ja: "確かに・実際・なるほど",
+        meaning: '英語から日本語への翻訳で悩みやすい語。文脈によって訳が大きく変わる。<br>① 確認・強調：<strong>「確かに」「その通り」</strong><br>② 同意：<strong>「なるほど」「そうですね」</strong><br>③ 皮肉・意外：<strong>「どうやら」「まったく」</strong><br>状況に合わせて選ぶことが重要。',
+        exFr: "Indeed, that is a difficult translation.",
+        exJa: "確かに、それは難しい翻訳だ。" },
+
+      { fr: "iconic", pos: "形容詞（英語）",
+        ja: "象徴的な・伝説的な・（SNS用語）最高にかっこいい",
+        meaning: 'SNS・口語では「最高すぎる」「伝説」「神」に近いポジティブな強調語。正式な文章では<strong>「象徴的な・代表的な」</strong>の意味。"How iconic!" を自然な日本語にするのは難しく、文脈次第で「さすがすぎる」「神ってる」「やっぱ最高」など変わる。',
+        exFr: "How iconic! — C\'est vraiment légendaire !",
+        exJa: "さすがすぎる！ — / 神ってる！" },
+
+      /* 追加するときはここにコピペ
+      { fr: "フランス語", pos: "品詞",
+        ja: "日本語訳",
+        meaning: "解説文。<strong>強調</strong>や<em>イタリック</em>もHTMLタグで使えます。",
+        exFr: "例文（フランス語）",
+        exJa: "例文（日本語）" },
+      */
+    ];
+
+    let currentQuery = '';
+
+    function filterWords() {
+      currentQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+      const filtered = words.filter(w =>
+        !currentQuery ||
+        w.fr.toLowerCase().includes(currentQuery) ||
+        w.ja.includes(currentQuery) ||
+        w.meaning.includes(currentQuery)
+      );
+      renderWords(filtered);
+    }
+
+    function renderWords(list) {
+      const container = document.getElementById('wordList');
+      const noResult  = document.getElementById('noResult');
+      const countEl   = document.getElementById('resultCount');
+      if (list.length === 0) {
+        container.innerHTML = '';
+        noResult.style.display = 'block';
+        noResult.textContent = '「' + currentQuery + '」は見つかりませんでした。';
+        countEl.textContent = '';
+        return;
+      }
+      noResult.style.display = 'none';
+      countEl.textContent = list.length + ' 件';
+      container.innerHTML = list.map(w => `
+        <div class="word-card" onclick="this.classList.toggle('open')">
+          <div class="word-header">
+            <span class="word-fr-label">${w.fr}</span>
+            <span class="word-ja-label">${w.ja}</span>
+            <span class="word-arrow">›</span>
+          </div>
+          <div class="word-detail">
+            <div class="word-meaning">${w.meaning}</div>
+            ${w.exFr ? `
+            <div class="word-example">
+              <div class="ex-fr">${w.exFr}</div>
+              <div class="ex-jp">${w.exJa || ''}</div>
+            </div>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    filterWords();
+
+    const ham=document.getElementById('ham'),mob=document.getElementById('mob');
+    ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':'';});
+    mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';}));
+  </script>
+</body>
+</html>
