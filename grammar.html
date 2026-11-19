@@ -72,7 +72,7 @@
     /* ── LAYOUT ── */
     .layout{max-width:1060px;margin:3rem auto 5rem;padding:0 2rem;display:flex;gap:2.4rem;align-items:flex-start;}
     .main-col{flex:3;min-width:0;}
-    .toc{flex:1;min-width:190px;position:sticky;top:80px;}
+    .toc{flex:1;min-width:190px;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto;align-self:flex-start;}
 
     /* ── 戻るリンク ── */
     .back-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--rouge-french);text-decoration:none;font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2rem;padding-bottom:4px;border-bottom:1px solid transparent;transition:border-color .2s;}
@@ -224,7 +224,7 @@
       .nav-links{display:none;}
       .hamburger{display:flex;}
       .layout{flex-direction:column;padding:0 1.2rem;}
-      .toc{position:static;width:100%;min-width:unset;}
+      .toc{position:static;width:100%;min-width:unset;max-height:none;overflow:visible;}
     }
     @media(max-width:500px){
       .page-header{padding:7rem 1.2rem 3rem;}
@@ -582,7 +582,7 @@
     </div><!-- /main-col -->
 
     <!-- ── 目次（右）── -->
-    <nav class="toc">
+    <aside class="toc">
       <div class="toc-inner">
         <h3>📂 目次</h3>
         <a href="#present">1. Présent</a>
@@ -603,7 +603,7 @@
         <a href="dictionary.html">辞書</a>
         <a href="translation.html">← 翻訳ログに戻る</a>
       </div>
-    </nav>
+    </aside>
 
   </div><!-- /layout -->
 
